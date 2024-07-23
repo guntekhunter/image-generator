@@ -1,0 +1,25 @@
+{
+  "name": "image-generator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "imaginesdk": "^1.1.0",
+    "next": "14.2.5",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.11",
+    "@types/react": "18.3.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "5.5.3"
+  }
+}
