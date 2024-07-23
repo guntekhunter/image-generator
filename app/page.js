@@ -9,7 +9,7 @@ export default function Home() {
     style_id: 22,
     seed: "42",
     aspect_ratio: "1:1",
-    strength: 50,
+    strength: 40,
     control: "depth",
     steps: 40,
     cfg: 7.5,
@@ -68,29 +68,42 @@ export default function Home() {
   };
 
   return (
-    <>
-      <form onSubmit={handleGenerate}>
-        <div>
-          <label>Prompt:</label>
+    <div className="space-y-[2rem] flex w-full justify-center py-[2rem]">
+      <div className="w-[90%] space-y-[2rem]">
+        <h1 className="text-[2rem] font-bold text-center">Selamat Datang</h1>
+        {/* <form onSubmit={handleGenerate}> */}
+        <div className="flex ">
+          <div className="w-full h-[5rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative">
+            <input
+              type="file"
+              name="image"
+              accept="image/jpeg, image/png"
+              onChange={handleImageChange}
+              className="absolute opacity-0 w-full h-full cursor-pointer"
+              required
+            />
+            <div className="text-black font-medium p-2 rounded flex justify-center content-center">
+              Drop file atau klik disini
+            </div>
+          </div>
+        </div>
+        <div className="flex rounded-md space-x-[1rem]">
           <input
             type="text"
             name="prompt"
             value={formData.prompt}
             onChange={handleInputChange}
+            className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
             required
           />
+
+          <button
+            onClick={handleGenerate}
+            className="bg-[#D9D9D9] h-stretch px-[1rem] rounded-md"
+          >
+            Kirim
+          </button>
         </div>
-        <div>
-          <label>Image:</label>
-          <input
-            type="file"
-            name="image"
-            accept="image/jpeg, image/png"
-            onChange={handleImageChange}
-            required
-          />
-        </div>
-        <button type="submit">Submit</button>
         {error && <p style={{ color: "red" }}>{error}</p>}
         {imageUrl && (
           <div>
@@ -98,7 +111,9 @@ export default function Home() {
             <img src={imageUrl} alt="Generated" style={{ maxWidth: "100%" }} />
           </div>
         )}
-      </form>
-    </>
+      </div>
+
+      {/* </form> */}
+    </div>
   );
 }
