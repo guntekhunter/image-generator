@@ -2,6 +2,7 @@
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
+import ModalStyle from "./component/modal/ModalStyle";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -15,13 +16,30 @@ export default function Home() {
     cfg: 7.5,
     negative_prompt: "No clouds",
   });
+  const [requiredData, setRequiredData] = useState({
+    budget: 0,
+    width: 0,
+    length: 0,
+    hight: 0,
+    products: [],
+    style: "",
+  });
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState("");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+  const handleInputRequirenment = (e) => {
+    const { name, value } = e.target;
+    setRequiredData({ ...formData, [name]: value });
   };
 
   const handleImageChange = (e) => {
@@ -50,7 +68,7 @@ export default function Home() {
         data,
         {
           headers: {
-            Authorization: `Bearer vk-TKyXH2GlMDMiE2qBZu08rRi4yiFAQOY2ha3qBkw26L16ZzMC`, // Replace with your actual API token
+            Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
             "Content-Type": "multipart/form-data",
           },
           responseType: "arraybuffer",
@@ -68,9 +86,103 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-[2rem] flex w-full justify-center py-[2rem]">
+    <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
+      <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
       <div className="w-[90%] space-y-[2rem]">
         <h1 className="text-[2rem] font-bold text-center">Selamat Datang</h1>
+        {/* the input requirenment of the room */}
+        <div className="space-y-[.5rem]">
+          <label className="font-bold">Budget</label>
+          <input
+            type="text"
+            name="budget"
+            value={requiredData.budget}
+            onChange={handleInputRequirenment}
+            className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-4 w-full">
+          <div className="space-y-[.5rem]">
+            <label className="font-bold">Panjang Ruangan</label>
+            <input
+              type="text"
+              name="width"
+              value={requiredData.width}
+              onChange={handleInputRequirenment}
+              className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+              required
+            />
+          </div>
+          <div className="space-y-[.5rem]">
+            <label className="font-bold">Lebar Ruangan</label>
+            <input
+              type="text"
+              name="length"
+              value={requiredData.length}
+              onChange={handleInputRequirenment}
+              className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+              required
+            />
+          </div>
+          <div className="space-y-[.5rem]">
+            <label className="font-bold">Tinggi Ruangan</label>
+            <input
+              type="text"
+              name="hight"
+              value={requiredData.hight}
+              onChange={handleInputRequirenment}
+              className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+              required
+            />
+          </div>
+        </div>
+        {/* products */}
+        <div className="flex justify-between">
+          <div className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative">
+            <div className="absolute text-center w-full h-full flex items-center justify-center">
+              <p className="font-bold text-white">Vinyl</p>
+            </div>
+            <Image
+              src="/vinyl.jfif"
+              width={500}
+              height={500}
+              className="w-full"
+            />
+          </div>
+          <div className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative">
+            <div className="absolute text-center w-full h-full flex items-center justify-center">
+              <p className="font-bold text-white">Wall Panel</p>
+            </div>
+            <Image
+              src="/wallpanel.jfif"
+              width={500}
+              height={500}
+              className="w-full"
+            />
+          </div>
+          <div className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative">
+            <div className="absolute text-center w-full h-full flex items-center justify-center">
+              <p className="font-bold text-white">Plafon</p>
+            </div>
+            <Image
+              src="/plafon.jpg"
+              width={500}
+              height={500}
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+
+        {/* Pilih Style */}
+        <div>
+          <button
+            className="bg-black p-[2rem] text-white rounded-md w-full"
+            onClick={openModal}
+          >
+            Pilih Style
+          </button>
+        </div>
         {/* <form onSubmit={handleGenerate}> */}
         <div className="flex ">
           <div className="w-full h-[5rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative">
