@@ -3,6 +3,11 @@ import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import ModalStyle from "./component/modal/ModalStyle";
+import fetchData from "./function/groq/Groq";
+
+const formatNumber = (value) => {
+  return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -27,6 +32,10 @@ export default function Home() {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState("");
+  const [vinyl, setVinyl] = useState(0);
+  const [wallpanel, setWallpanel] = useState(0);
+  const [plafon, setPlafon] = useState(0);
+  const [summary, setSummary] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -39,7 +48,20 @@ export default function Home() {
   };
   const handleInputRequirenment = (e) => {
     const { name, value } = e.target;
-    setRequiredData({ ...formData, [name]: value });
+    if (e.target.name === "budget") {
+      const numericValue = value.replace(/\./g, ""); // Remove existing dots
+      const formattedValue = formatNumber(numericValue);
+      setRequiredData({ ...requiredData, [name]: formattedValue });
+      console.log(formattedValue);
+    } else if (
+      e.target.name === "width" ||
+      e.target.name === "length" ||
+      e.target.name === "hight"
+    ) {
+      setRequiredData({ ...requiredData, [name]: value });
+    } else {
+      setRequiredData({ ...requiredData, [name]: value });
+    }
   };
 
   const handleImageChange = (e) => {
@@ -62,29 +84,53 @@ export default function Home() {
     if (formData.negative_prompt)
       data.append("negative_prompt", formData.negative_prompt);
 
+    console.log("ommaleka");
     try {
-      const response = await axios.post(
-        "https://api.vyro.ai/v1/imagine/api/edits/remix",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
-            "Content-Type": "multipart/form-data",
-          },
-          responseType: "arraybuffer",
-        }
-      );
-      const blob = new Blob([response.data], { type: "image/png" });
-      const imageUrl = URL.createObjectURL(blob);
-      setImageUrl(imageUrl);
-      console.log(imageUrl);
-      setError("");
+      const inputText = `halo`;
+
+      const handleChunk = (chunk) => {
+        console.log("Received chunk:", chunk);
+        setSummary((prev) => prev + chunk);
+        // Handle each chunk of data here
+      };
+      fetchData(inputText, handleChunk)
+        .then((response) => {
+          console.log("Fetch data complete:", response);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
     } catch (error) {
       console.log(error);
-      setError("An error occurred while processing your request.");
     }
+    // try {
+    // const response = await axios.post(
+    //   "https://api.vyro.ai/v1/imagine/api/edits/remix",
+    //   data,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     responseType: "arraybuffer",
+    //   }
+    // );
+    // const blob = new Blob([response.data], { type: "image/png" });
+    // const imageUrl = URL.createObjectURL(blob);
+    // setImageUrl(imageUrl);
+    // console.log(imageUrl);
+    // setError("");
+
+    // rumus hitung kebutuhan
+
+    //   console.log(requiredData.length);
+    // } catch (error) {
+    //   console.log(error);
+    //   setError("An error occurred while processing your request.");
+    // }
   };
 
+  console.log(requiredData);
   return (
     <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
       <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
@@ -96,7 +142,7 @@ export default function Home() {
           <input
             type="text"
             name="budget"
-            value={requiredData.budget}
+            value={requiredData?.budget !== 0 ? requiredData.budget : " "}
             onChange={handleInputRequirenment}
             className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
             required
@@ -104,33 +150,33 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-3 gap-4 w-full">
           <div className="space-y-[.5rem]">
-            <label className="font-bold">Panjang Ruangan</label>
+            <label className="font-bold">Panjang Ruangan (cm)</label>
             <input
               type="text"
               name="width"
-              value={requiredData.width}
+              value={requiredData?.width !== 0 ? requiredData.width : " "}
               onChange={handleInputRequirenment}
               className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
               required
             />
           </div>
           <div className="space-y-[.5rem]">
-            <label className="font-bold">Lebar Ruangan</label>
+            <label className="font-bold">Lebar Ruangan (cm)</label>
             <input
               type="text"
               name="length"
-              value={requiredData.length}
+              value={requiredData?.length !== 0 ? requiredData.length : " "}
               onChange={handleInputRequirenment}
               className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
               required
             />
           </div>
           <div className="space-y-[.5rem]">
-            <label className="font-bold">Tinggi Ruangan</label>
+            <label className="font-bold">Tinggi Ruangan (cm)</label>
             <input
               type="text"
               name="hight"
-              value={requiredData.hight}
+              value={requiredData?.hight !== 0 ? requiredData.hight : " "}
               onChange={handleInputRequirenment}
               className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
               required
@@ -216,6 +262,7 @@ export default function Home() {
             Kirim
           </button>
         </div>
+        <div>{summary}</div>
         {error && <p style={{ color: "red" }}>{error}</p>}
         {imageUrl && (
           <div>
