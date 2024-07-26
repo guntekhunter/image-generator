@@ -1,9 +1,10 @@
 "use client";
 import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalStyle from "./component/modal/ModalStyle";
 import fetchData from "./function/groq/Groq";
+import fetchPrompt from "./function/promter/Groq";
 import Markdown from "markdown-to-jsx";
 
 const formatNumber = (value) => {
@@ -39,6 +40,8 @@ export default function Home() {
   const [summary, setSummary] = useState("");
   const [newProduct, setNewProduct] = useState("");
   const [afordable, setAfordable] = useState(0);
+  const [budgetAnalysist, setBudgetAnalysist] = useState("");
+  const [prompt, setPrompt] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -107,15 +110,6 @@ export default function Home() {
       },
     };
 
-    const handleProducts = (e) => {
-      setRequiredData((prevData) => ({
-        ...prevData,
-        products: [...prevData.products, e].filter(
-          (item, index, self) => self.indexOf(item) === index
-        ),
-      }));
-    };
-
     const calculateAffordableUnits = (budget, price) => {
       return Math.floor(budget / price);
     };
@@ -131,8 +125,14 @@ export default function Home() {
             );
             setAfordable(affordableUnits);
             return `
-            
-            Anda dapat membeli ${affordableUnits} unit dengan budget ${requiredData.budget}
+            ${product}:
+            harga = RP. ${details.harga}
+            panjang = ${details.panjang}
+            lebar = ${details.lebar}
+            ${details.dus ? `dus = ${details.dus}` : ""}
+            Anda dapat membeli ${affordableUnits} unit dengan budget ${
+              requiredData.budget
+            }
           `;
           }
           return "";
@@ -153,18 +153,50 @@ export default function Home() {
       berikan kesimpulan dibagian terakhir perhitungan dalam bentuk tabel, berisi nama produk, jumlah lembar, jumlah dus dan harga, pada bagian bawah berikan bagian total, untuk informasi tambahan plafon PVC itu dibeli perlembar, lantai vinyl dibeli perdus, dan wallpanel dibeli perlembar berikan respon dalam bentuk markup language 
       `;
 
+      const handleError = (error) => {
+        console.error("Error:", error);
+      };
+
       const handleChunk = (chunk) => {
-        console.log("Received chunk:", chunk);
+        // console.log("Received chunk:", chunk);
         setSummary((prev) => prev + chunk);
         // Handle each chunk of data here
       };
-      fetchData(inputText, handleChunk)
+      fetchData(inputText, handleChunk, handleError)
+        .then((response) => {
+          // console.log("Fetch data complete:", response);
+          setBudgetAnalysist(response);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+
+      console.log(summary);
+      // prompter();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (budgetAnalysist) {
+      prompter();
+    }
+  }, []);
+
+  const prompter = async () => {
+    console.log(prompter);
+    try {
+      const inputText = { budgetAnalysist };
+      const data = fetchPrompt(inputText)
         .then((response) => {
           console.log("Fetch data complete:", response);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
+
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -183,7 +215,7 @@ export default function Home() {
     });
   };
 
-  console.log(requiredData);
+  console.log(prompt);
   return (
     <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
       <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
@@ -336,7 +368,6 @@ export default function Home() {
           </div>
         )}
       </div>
-
       {/* </form> */}
     </div>
   );
