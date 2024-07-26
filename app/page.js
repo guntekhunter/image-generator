@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import ModalStyle from "./component/modal/ModalStyle";
 import fetchData from "./function/groq/Groq";
+import Markdown from "markdown-to-jsx";
 
 const formatNumber = (value) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -36,6 +37,8 @@ export default function Home() {
   const [wallpanel, setWallpanel] = useState(0);
   const [plafon, setPlafon] = useState(0);
   const [summary, setSummary] = useState("");
+  const [newProduct, setNewProduct] = useState("");
+  const [afordable, setAfordable] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -84,9 +87,71 @@ export default function Home() {
     if (formData.negative_prompt)
       data.append("negative_prompt", formData.negative_prompt);
 
-    console.log("ommaleka");
+    setSummary("");
+    const productDetails = {
+      wallpanel: {
+        harga: 40000, // in RP
+        panjang: "2.90 m",
+        lebar: "16 cm",
+      },
+      vinyl: {
+        harga: 300000, // in RP
+        panjang: "91 cm",
+        lebar: "12.2 cm",
+        dus: "36 lembar dalam satu dus",
+      },
+      plafonPVC: {
+        harga: 17000, // in RP
+        panjang: "6 meter dan 4 meter",
+        lebar: "20 cm",
+      },
+    };
+
+    const handleProducts = (e) => {
+      setRequiredData((prevData) => ({
+        ...prevData,
+        products: [...prevData.products, e].filter(
+          (item, index, self) => self.indexOf(item) === index
+        ),
+      }));
+    };
+
+    const calculateAffordableUnits = (budget, price) => {
+      return Math.floor(budget / price);
+    };
+
     try {
-      const inputText = `halo`;
+      const availableProducts = requiredData.products
+        .map((product) => {
+          const details = productDetails[product];
+          if (details) {
+            const affordableUnits = calculateAffordableUnits(
+              requiredData.budget,
+              details.harga
+            );
+            setAfordable(affordableUnits);
+            return `
+            
+            Anda dapat membeli ${affordableUnits} unit dengan budget ${requiredData.budget}
+          `;
+          }
+          return "";
+        })
+        .join("\n");
+
+      const inputText = `buat analisa kebutuhan [${requiredData.products.join(
+        ", "
+      )}], untuk budget ${
+        requiredData.budget
+      } ini informasi tentang kebutuhan pengguna:
+      panjang ruangan = ${requiredData.length}
+      lebar ruangan = ${requiredData.width}
+      tinggi ruangan = ${requiredData.hight}
+      hanya ini produk yang dapat didapat: 
+      ${availableProducts}
+  
+      berikan kesimpulan dibagian terakhir perhitungan dalam bentuk tabel, berisi nama produk, jumlah lembar, jumlah dus dan harga, pada bagian bawah berikan bagian total, untuk informasi tambahan plafon PVC itu dibeli perlembar, lantai vinyl dibeli perdus, dan wallpanel dibeli perlembar berikan respon dalam bentuk markup language 
+      `;
 
       const handleChunk = (chunk) => {
         console.log("Received chunk:", chunk);
@@ -103,31 +168,19 @@ export default function Home() {
     } catch (error) {
       console.log(error);
     }
-    // try {
-    // const response = await axios.post(
-    //   "https://api.vyro.ai/v1/imagine/api/edits/remix",
-    //   data,
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //     responseType: "arraybuffer",
-    //   }
-    // );
-    // const blob = new Blob([response.data], { type: "image/png" });
-    // const imageUrl = URL.createObjectURL(blob);
-    // setImageUrl(imageUrl);
-    // console.log(imageUrl);
-    // setError("");
-
-    // rumus hitung kebutuhan
-
-    //   console.log(requiredData.length);
-    // } catch (error) {
-    //   console.log(error);
-    //   setError("An error occurred while processing your request.");
-    // }
+  };
+  const handleProducts = (e) => {
+    setRequiredData((prevData) => {
+      // Check if the product is already in the array
+      if (prevData.products.includes(e)) {
+        return prevData; // If it is, return the previous state without changes
+      }
+      // If not, add the product to the array
+      return {
+        ...prevData,
+        products: [...prevData.products, e],
+      };
+    });
   };
 
   console.log(requiredData);
@@ -150,7 +203,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-3 gap-4 w-full">
           <div className="space-y-[.5rem]">
-            <label className="font-bold">Panjang Ruangan (cm)</label>
+            <label className="font-bold">Panjang Ruangan (m)</label>
             <input
               type="text"
               name="width"
@@ -161,7 +214,7 @@ export default function Home() {
             />
           </div>
           <div className="space-y-[.5rem]">
-            <label className="font-bold">Lebar Ruangan (cm)</label>
+            <label className="font-bold">Lebar Ruangan (m)</label>
             <input
               type="text"
               name="length"
@@ -172,7 +225,7 @@ export default function Home() {
             />
           </div>
           <div className="space-y-[.5rem]">
-            <label className="font-bold">Tinggi Ruangan (cm)</label>
+            <label className="font-bold">Tinggi Ruangan (m)</label>
             <input
               type="text"
               name="hight"
@@ -183,9 +236,13 @@ export default function Home() {
             />
           </div>
         </div>
+        <div>{afordable}</div>
         {/* products */}
         <div className="flex justify-between">
-          <div className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative">
+          <button
+            className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
+            onClick={() => handleProducts("vinyl")}
+          >
             <div className="absolute text-center w-full h-full flex items-center justify-center">
               <p className="font-bold text-white">Vinyl</p>
             </div>
@@ -195,8 +252,11 @@ export default function Home() {
               height={500}
               className="w-full"
             />
-          </div>
-          <div className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative">
+          </button>
+          <button
+            className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
+            onClick={() => handleProducts("wallpanel")}
+          >
             <div className="absolute text-center w-full h-full flex items-center justify-center">
               <p className="font-bold text-white">Wall Panel</p>
             </div>
@@ -206,8 +266,11 @@ export default function Home() {
               height={500}
               className="w-full"
             />
-          </div>
-          <div className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative">
+          </button>
+          <button
+            className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
+            onClick={() => handleProducts("plafon")}
+          >
             <div className="absolute text-center w-full h-full flex items-center justify-center">
               <p className="font-bold text-white">Plafon</p>
             </div>
@@ -217,7 +280,7 @@ export default function Home() {
               height={500}
               className="w-full h-full"
             />
-          </div>
+          </button>
         </div>
 
         {/* Pilih Style */}
@@ -262,7 +325,9 @@ export default function Home() {
             Kirim
           </button>
         </div>
-        <div>{summary}</div>
+        <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
+          <Markdown>{summary}</Markdown>
+        </article>
         {error && <p style={{ color: "red" }}>{error}</p>}
         {imageUrl && (
           <div>

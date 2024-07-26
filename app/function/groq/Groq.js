@@ -10,7 +10,10 @@ const fetchData = (inputText, callback, onError) => {
       });
 
       const prompt = ChatPromptTemplate.fromMessages([
-        ["system", "You are a helpful assistant"],
+        [
+          "system",
+          "Anda adalah seorang interior desainer profesional. Tugas Anda adalah membantu pengguna menghitung kebutuhan material untuk proyek interior berdasarkan informasi yang diberikan seperti ukuran ruangan, jenis material yang diinginkan, dan anggaran yang tersedia. Anda juga memberikan saran penggunaan material yang paling efisien dan sesuai dengan preferensi desain dan budget pengguna. Anda harus memberikan jawaban yang jelas, praktis, dan ramah. dan semua responmu dalam bahasa indonesia",
+        ],
         ["human", inputText],
       ]);
 
