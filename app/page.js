@@ -76,19 +76,6 @@ export default function Home() {
 
   const handleGenerate = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("prompt", formData.prompt);
-    data.append("style_id", String(formData.style_id));
-    if (image) data.append("image", image);
-    if (formData.seed) data.append("seed", String(formData.seed));
-    if (formData.aspect_ratio)
-      data.append("aspect_ratio", formData.aspect_ratio);
-    if (formData.strength) data.append("strength", String(formData.strength));
-    if (formData.control) data.append("control", formData.control);
-    if (formData.steps) data.append("steps", String(formData.steps));
-    if (formData.cfg) data.append("cfg", String(formData.cfg));
-    if (formData.negative_prompt)
-      data.append("negative_prompt", formData.negative_prompt);
 
     setSummary("");
     const productDetails = {
@@ -113,6 +100,7 @@ export default function Home() {
     const calculateAffordableUnits = (budget, price) => {
       return Math.floor(budget / price);
     };
+    setBudgetAnalysist("");
 
     try {
       const availableProducts = requiredData.products
@@ -158,56 +146,95 @@ export default function Home() {
       };
 
       const handleChunk = (chunk) => {
-        // console.log("Received chunk:", chunk);
         setSummary((prev) => prev + chunk);
-        // Handle each chunk of data here
       };
       fetchData(inputText, handleChunk, handleError)
         .then((response) => {
-          // console.log("Fetch data complete:", response);
-          setBudgetAnalysist(response);
+          setBudgetAnalysist(`response`);
+          console.log("ini responsenya", response);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-
-      console.log(summary);
-      // prompter();
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (budgetAnalysist) {
-      prompter();
-    }
-  }, []);
-
-  const prompter = async () => {
-    console.log(prompter);
-    try {
-      const inputText = { budgetAnalysist };
-      const data = fetchPrompt(inputText)
-        .then((response) => {
-          console.log("Fetch data complete:", response);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-
-      console.log(data);
-    } catch (error) {
+    const data = new FormData();
+    data.append("prompt", prompt);
+    data.append("style_id", String(formData.style_id));
+    if (image) data.append("image", image);
+    if (formData.seed) data.append("seed", String(formData.seed));
+    if (formData.aspect_ratio)
+      data.append("aspect_ratio", formData.aspect_ratio);
+    if (formData.strength) data.append("strength", String(formData.strength));
+    if (formData.control) data.append("control", formData.control);
+    if (formData.steps) data.append("steps", String(formData.steps));
+    if (formData.cfg) data.append("cfg", String(formData.cfg));
+    if (formData.negative_prompt)
+      data.append("negative_prompt", formData.negative_prompt);
+    console.log("ini bede", data);
+    if (prompt) {
+      const generate = async () => {
+        try {
+          const response = await axios.post(
+            "https://api.vyro.ai/v1/imagine/api/edits/remix",
+            data,
+            {
+              headers: {
+                Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
+                "Content-Type": "multipart/form-data",
+              },
+              responseType: "arraybuffer",
+            }
+          );
+          const blob = new Blob([response.data], { type: "image/png" });
+          const imageUrl = URL.createObjectURL(blob);
+          setImageUrl(imageUrl);
+          console.log(imageUrl);
+          setError("");
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      generate();
+    } else {
       console.log(error);
     }
-  };
+  }, [prompt]);
+
+  useEffect(() => {
+    if (budgetAnalysist) {
+      const prompter = async (e) => {
+        console.log(prompter);
+        try {
+          const inputText = budgetAnalysist;
+          const data = fetchPrompt(inputText)
+            .then((response) => {
+              setPrompt(response.content);
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+
+          console.log(data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      prompter();
+    } else {
+      console.log(error);
+    }
+  }, [budgetAnalysist]);
+
   const handleProducts = (e) => {
     setRequiredData((prevData) => {
-      // Check if the product is already in the array
       if (prevData.products.includes(e)) {
-        return prevData; // If it is, return the previous state without changes
+        return prevData;
       }
-      // If not, add the product to the array
       return {
         ...prevData,
         products: [...prevData.products, e],
@@ -215,7 +242,6 @@ export default function Home() {
     });
   };
 
-  console.log(prompt);
   return (
     <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
       <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
