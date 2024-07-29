@@ -6,6 +6,8 @@ import ModalStyle from "./component/modal/ModalStyle";
 import fetchData from "./function/groq/Groq";
 import fetchPrompt from "./function/promter/Groq";
 import Markdown from "markdown-to-jsx";
+import Button from "../app/component/template/Button"
+import Input from "../app/component/template/Input"
 
 const formatNumber = (value) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -243,158 +245,241 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
-      <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
-      <div className="w-[90%] space-y-[2rem]">
-        <h1 className="text-[2rem] font-bold text-center">Selamat Datang</h1>
-        {/* the input requirenment of the room */}
-        <div className="space-y-[.5rem]">
-          <label className="font-bold">Budget</label>
-          <input
-            type="text"
-            name="budget"
-            value={requiredData?.budget !== 0 ? requiredData.budget : " "}
-            onChange={handleInputRequirenment}
-            className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-            required
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-4 w-full">
-          <div className="space-y-[.5rem]">
-            <label className="font-bold">Panjang Ruangan (m)</label>
-            <input
-              type="text"
-              name="width"
-              value={requiredData?.width !== 0 ? requiredData.width : " "}
-              onChange={handleInputRequirenment}
-              className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-              required
-            />
-          </div>
-          <div className="space-y-[.5rem]">
-            <label className="font-bold">Lebar Ruangan (m)</label>
-            <input
-              type="text"
-              name="length"
-              value={requiredData?.length !== 0 ? requiredData.length : " "}
-              onChange={handleInputRequirenment}
-              className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-              required
-            />
-          </div>
-          <div className="space-y-[.5rem]">
-            <label className="font-bold">Tinggi Ruangan (m)</label>
-            <input
-              type="text"
-              name="hight"
-              value={requiredData?.hight !== 0 ? requiredData.hight : " "}
-              onChange={handleInputRequirenment}
-              className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-              required
-            />
-          </div>
-        </div>
-        <div>{afordable}</div>
-        {/* products */}
-        <div className="flex justify-between">
-          <button
-            className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
-            onClick={() => handleProducts("vinyl")}
-          >
-            <div className="absolute text-center w-full h-full flex items-center justify-center">
-              <p className="font-bold text-white">Vinyl</p>
+    <div className="flex justify-around">
+      <div className="w-[98%] py-[.8rem]">
+        <section>
+          <div className="bg-[url('/section.png')] bg-cover bg-center bg-green-200 rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
+            <div className="w-[60%] space-y-[1rem] text-white">
+              <h1 className="text-[3rem] font-semibold leading-[3.8rem]">Desain Rumah Lebih Mudah Dengan AI</h1>
+              <div className="w-[80%] space-y-[1rem]">
+                <p className="leading-[1.8rem]">Pevesindo Menyediakan jasa desian interior dalam hitungan menit  Menggunakan Teknology AI, Desain Rumah Lebih Cepat dan Mudah</p>
+                <div className="bg-white h-[3rem] flex justify-around px-[1.5rem] rounded-[10px]">
+                  <input className="w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda"/>
+                </div>
+                <Button className="w-[10rem]">Mulai</Button>
+              </div>
             </div>
-            <Image
-              src="/vinyl.jfif"
-              width={500}
-              height={500}
-              className="w-full"
-            />
-          </button>
-          <button
-            className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
-            onClick={() => handleProducts("wallpanel")}
-          >
-            <div className="absolute text-center w-full h-full flex items-center justify-center">
-              <p className="font-bold text-white">Wall Panel</p>
+          </div>
+        </section>
+        <section>
+          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
+          <div className="relative w-full overflow-hidden">
+            <div className="w-full h-full grid grid-flow-col gap-[1rem] auto-cols-[25rem] transition-transform duration-300" id="slider">
+              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
             </div>
-            <Image
-              src="/wallpanel.jfif"
-              width={500}
-              height={500}
-              className="w-full"
-            />
-          </button>
-          <button
-            className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
-            onClick={() => handleProducts("plafon")}
-          >
-            <div className="absolute text-center w-full h-full flex items-center justify-center">
-              <p className="font-bold text-white">Plafon</p>
-            </div>
-            <Image
-              src="/plafon.jpg"
-              width={500}
-              height={500}
-              className="w-full h-full"
-            />
-          </button>
-        </div>
+          </div>
 
-        {/* Pilih Style */}
-        <div>
-          <button
-            className="bg-black p-[2rem] text-white rounded-md w-full"
-            onClick={openModal}
-          >
-            Pilih Style
-          </button>
-        </div>
-        {/* <form onSubmit={handleGenerate}> */}
-        <div className="flex ">
-          <div className="w-full h-[5rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative">
-            <input
-              type="file"
-              name="image"
-              accept="image/jpeg, image/png"
-              onChange={handleImageChange}
-              className="absolute opacity-0 w-full h-full cursor-pointer"
-              required
-            />
-            <div className="text-black font-medium p-2 rounded flex justify-center content-center">
-              Drop file atau klik disini
+        </section>
+        <section>
+          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
+          <div className="flex space-x-[1rem]">
+            <div className="w-full">
+              <Input>Budget</Input>
+              <p className="py-[.5rem]">Pilih Ruangan</p>
+              <div className="relative w-full overflow-hidden">
+                <div className="w-full h-full grid grid-flow-col transition-transform duration-300 space-x-[.8rem] h-[10rem] auto-cols-[13rem]" id="slider">
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                </div>
+              </div>
+              <p className="py-[.5rem]">Pilih Style</p>
+              <div className="relative w-full overflow-hidden">
+                <div className="w-full h-full grid grid-flow-col transition-transform duration-300 space-x-[.8rem] h-[10rem] auto-cols-[13rem]" id="slider">
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                </div>
+              </div>
+            </div>
+            <div className="w-full space-y-[.5rem]">
+              <Input>Lebar Ruangan (m)</Input>
+              <Input>Panjang Ruangan (m)</Input>
+              <Input>Tinggi Ruangan (m)</Input>
+              <div className="flex ">
+              <div className="w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem]">
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/jpeg, image/png"
+                  onChange={handleImageChange}
+                  className="absolute opacity-0 w-full h-full cursor-pointer"
+                  required
+                />
+                <div className="text-black font-medium p-2 rounded flex justify-center content-center">
+                  Masukkan Foto Ruangan
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex rounded-md space-x-[1rem]">
-          <input
-            type="text"
-            name="prompt"
-            value={formData.prompt}
-            onChange={handleInputChange}
-            className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-            required
-          />
-
-          <button
-            onClick={handleGenerate}
-            className="bg-[#D9D9D9] h-stretch px-[1rem] rounded-md"
-          >
-            Kirim
-          </button>
-        </div>
-        <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
-          <Markdown>{summary}</Markdown>
-        </article>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {imageUrl && (
-          <div>
-            <h2>Generated Image:</h2>
-            <img src={imageUrl} alt="Generated" style={{ maxWidth: "100%" }} />
           </div>
-        )}
+        </section>
+        <section className="py-[1rem]">
+          <Button className="w-full">Mulai</Button>
+        </section>
+        <section className="flex space-x-[1rem]">
+        <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center w-[50%]"/>
+        <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center w-[50%]"/>
+        </section>
       </div>
-      {/* </form> */}
     </div>
+    // <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
+    //   <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
+    //   <div className="w-[90%] space-y-[2rem]">
+    //     <h1 className="text-[2rem] font-bold text-center">Selamat Datang</h1>
+    //     {/* the input requirenment of the room */}
+    //     <div className="space-y-[.5rem]">
+    //       <label className="font-bold">Budget</label>
+    //       <input
+    //         type="text"
+    //         name="budget"
+    //         value={requiredData?.budget !== 0 ? requiredData.budget : " "}
+    //         onChange={handleInputRequirenment}
+    //         className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+    //         required
+    //       />
+    //     </div>
+    //     <div className="grid grid-cols-3 gap-4 w-full">
+    //       <div className="space-y-[.5rem]">
+    //         <label className="font-bold">Panjang Ruangan (m)</label>
+    //         <input
+    //           type="text"
+    //           name="width"
+    //           value={requiredData?.width !== 0 ? requiredData.width : " "}
+    //           onChange={handleInputRequirenment}
+    //           className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+    //           required
+    //         />
+    //       </div>
+    //       <div className="space-y-[.5rem]">
+    //         <label className="font-bold">Lebar Ruangan (m)</label>
+    //         <input
+    //           type="text"
+    //           name="length"
+    //           value={requiredData?.length !== 0 ? requiredData.length : " "}
+    //           onChange={handleInputRequirenment}
+    //           className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+    //           required
+    //         />
+    //       </div>
+    //       <div className="space-y-[.5rem]">
+    //         <label className="font-bold">Tinggi Ruangan (m)</label>
+    //         <input
+    //           type="text"
+    //           name="hight"
+    //           value={requiredData?.hight !== 0 ? requiredData.hight : " "}
+    //           onChange={handleInputRequirenment}
+    //           className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+    //           required
+    //         />
+    //       </div>
+    //     </div>
+    //     <div>{afordable}</div>
+    //     {/* products */}
+    //     <div className="flex justify-between">
+    //       <button
+    //         className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
+    //         onClick={() => handleProducts("vinyl")}
+    //       >
+    //         <div className="absolute text-center w-full h-full flex items-center justify-center">
+    //           <p className="font-bold text-white">Vinyl</p>
+    //         </div>
+    //         <Image
+    //           src="/vinyl.jfif"
+    //           width={500}
+    //           height={500}
+    //           className="w-full"
+    //         />
+    //       </button>
+    //       <button
+    //         className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
+    //         onClick={() => handleProducts("wallpanel")}
+    //       >
+    //         <div className="absolute text-center w-full h-full flex items-center justify-center">
+    //           <p className="font-bold text-white">Wall Panel</p>
+    //         </div>
+    //         <Image
+    //           src="/wallpanel.jfif"
+    //           width={500}
+    //           height={500}
+    //           className="w-full"
+    //         />
+    //       </button>
+    //       <button
+    //         className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
+    //         onClick={() => handleProducts("plafon")}
+    //       >
+    //         <div className="absolute text-center w-full h-full flex items-center justify-center">
+    //           <p className="font-bold text-white">Plafon</p>
+    //         </div>
+    //         <Image
+    //           src="/plafon.jpg"
+    //           width={500}
+    //           height={500}
+    //           className="w-full h-full"
+    //         />
+    //       </button>
+    //     </div>
+
+    //     {/* Pilih Style */}
+    //     <div>
+    //       <button
+    //         className="bg-black p-[2rem] text-white rounded-md w-full"
+    //         onClick={openModal}
+    //       >
+    //         Pilih Style
+    //       </button>
+    //     </div>
+    //     {/* <form onSubmit={handleGenerate}> */}
+    //     <div className="flex ">
+    //       <div className="w-full h-[5rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative">
+    //         <input
+    //           type="file"
+    //           name="image"
+    //           accept="image/jpeg, image/png"
+    //           onChange={handleImageChange}
+    //           className="absolute opacity-0 w-full h-full cursor-pointer"
+    //           required
+    //         />
+    //         <div className="text-black font-medium p-2 rounded flex justify-center content-center">
+    //           Drop file atau klik disini
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <div className="flex rounded-md space-x-[1rem]">
+    //       <input
+    //         type="text"
+    //         name="prompt"
+    //         value={formData.prompt}
+    //         onChange={handleInputChange}
+    //         className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
+    //         required
+    //       />
+
+    //       <button
+    //         onClick={handleGenerate}
+    //         className="bg-[#D9D9D9] h-stretch px-[1rem] rounded-md"
+    //       >
+    //         Kirim
+    //       </button>
+    //     </div>
+    //     <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
+    //       <Markdown>{summary}</Markdown>
+    //     </article>
+    //     {error && <p style={{ color: "red" }}>{error}</p>}
+    //     {imageUrl && (
+    //       <div>
+    //         <h2>Generated Image:</h2>
+    //         <img src={imageUrl} alt="Generated" style={{ maxWidth: "100%" }} />
+    //       </div>
+    //     )}
+    //   </div>
+    //   {/* </form> */}
+    // </div>
   );
 }
