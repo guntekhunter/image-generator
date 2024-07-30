@@ -8,6 +8,7 @@ import fetchPrompt from "./function/promter/Groq";
 import Markdown from "markdown-to-jsx";
 import Button from "../app/component/template/Button"
 import Input from "../app/component/template/Input"
+import Navbar from "../app/component/template/Navbar"
 
 const formatNumber = (value) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -35,6 +36,7 @@ export default function Home() {
   });
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [imageUrlUploaded, setImageUrlUploaded] = useState("");
   const [error, setError] = useState("");
   const [vinyl, setVinyl] = useState(0);
   const [wallpanel, setWallpanel] = useState(0);
@@ -73,7 +75,11 @@ export default function Home() {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      const selected = e.target.files[0]
+      setImage(e.target.files[0]);
+      setImageUrlUploaded(URL.createObjectURL(selected))
+    }
   };
 
   const handleGenerate = async (e) => {
@@ -120,9 +126,8 @@ export default function Home() {
             panjang = ${details.panjang}
             lebar = ${details.lebar}
             ${details.dus ? `dus = ${details.dus}` : ""}
-            Anda dapat membeli ${affordableUnits} unit dengan budget ${
-              requiredData.budget
-            }
+            Anda dapat membeli ${affordableUnits} unit dengan budget ${requiredData.budget
+              }
           `;
           }
           return "";
@@ -131,9 +136,8 @@ export default function Home() {
 
       const inputText = `buat analisa kebutuhan [${requiredData.products.join(
         ", "
-      )}], untuk budget ${
-        requiredData.budget
-      } ini informasi tentang kebutuhan pengguna:
+      )}], untuk budget ${requiredData.budget
+        } ini informasi tentang kebutuhan pengguna:
       panjang ruangan = ${requiredData.length}
       lebar ruangan = ${requiredData.width}
       tinggi ruangan = ${requiredData.hight}
@@ -244,17 +248,24 @@ export default function Home() {
     });
   };
 
+  const handleStyle = (e) => {
+    setRequiredData({ ...requiredData, ["style"]: e });
+  }
+  console.log(requiredData)
+
   return (
     <div className="flex justify-around">
       <div className="w-[98%] py-[.8rem]">
         <section>
-          <div className="bg-[url('/section.png')] bg-cover bg-center bg-green-200 rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
+          <div className="bg-[url('/section.png')] bg-cover bg-center rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
             <div className="w-[60%] space-y-[1rem] text-white">
               <h1 className="text-[3rem] font-semibold leading-[3.8rem]">Desain Rumah Lebih Mudah Dengan AI</h1>
               <div className="w-[80%] space-y-[1rem]">
                 <p className="leading-[1.8rem]">Pevesindo Menyediakan jasa desian interior dalam hitungan menit  Menggunakan Teknology AI, Desain Rumah Lebih Cepat dan Mudah</p>
                 <div className="bg-white h-[3rem] flex justify-around px-[1.5rem] rounded-[10px]">
-                  <input className="w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda"/>
+                  <input name="budget"
+                    value={requiredData?.budget !== 0 ? requiredData.budget : " "}
+                    onChange={handleInputRequirenment} className="w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda" />
                 </div>
                 <Button className="w-[10rem]">Mulai</Button>
               </div>
@@ -265,10 +276,22 @@ export default function Home() {
           <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
           <div className="relative w-full overflow-hidden">
             <div className="w-full h-full grid grid-flow-col gap-[1rem] auto-cols-[25rem] transition-transform duration-300" id="slider">
-              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-              <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+              <button onClick={() => handleProducts("wallpanel")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/wallpanel.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                <p className="pt-full text-white drop-shadow-xl">Wallpanel WPC</p>
+              </button>
+              <button onClick={() => handleProducts("vinyl")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/vinyl.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                <p className="pt-full text-white drop-shadow-xl">Vinyl</p>
+              </button>
+              <button onClick={() => handleProducts("plafon")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/plafon.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                <p className="pt-full text-white drop-shadow-xl">Plafon PVC</p>
+              </button>
+              <button onClick={() => handleProducts("uv board")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/marmer.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                <p className="pt-full text-white drop-shadow-xl">UV Board</p>
+              </button>
             </div>
           </div>
 
@@ -280,51 +303,112 @@ export default function Home() {
               <Input>Budget</Input>
               <p className="py-[.5rem]">Pilih Ruangan</p>
               <div className="relative w-full overflow-hidden">
-                <div className="w-full h-full grid grid-flow-col transition-transform duration-300 space-x-[.8rem] h-[10rem] auto-cols-[13rem]" id="slider">
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
+                  <div className="rounded-[10px] bg-[url('/kamar-tidur.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">
+                      Kamar Tidur
+                    </p>
+                  </div>
+                  <div className="rounded-[10px] bg-[url('/ruang-keluarga.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">
+                      Ruang Keluarga
+                    </p>
+                  </div>
+                  <div className="rounded-[10px] bg-[url('/ruang-tamu.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">
+                      Ruang Tamu
+                    </p>
+                  </div>
+                  <div className="rounded-[10px] bg-[url('/kantor.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">
+                      Kantor
+                    </p>
+                  </div>
                 </div>
               </div>
               <p className="py-[.5rem]">Pilih Style</p>
               <div className="relative w-full overflow-hidden">
-                <div className="w-full h-full grid grid-flow-col transition-transform duration-300 space-x-[.8rem] h-[10rem] auto-cols-[13rem]" id="slider">
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
-                  <div className="bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center"/>
+                <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
+                  <button onClick={(e) => handleStyle("Modern")} className="rounded-[10px] bg-[url('/modern.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">Modern</p>
+                  </button>
+                  <button onClick={(e) => handleStyle("Industrial")} className="rounded-[10px] bg-[url('/industrial.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">Industrial</p>
+                  </button>
+                  <button onClick={(e) => handleStyle("Japandi")} className="rounded-[10px] bg-[url('/japandi.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">Japandi</p>
+                  </button>
+                  <button onClick={(e) => handleStyle("Scandinavian")} className="rounded-[10px] bg-[url('/scandinavian.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <p className="text-white drop-shadow-md">Scandinavian</p>
+                  </button>
                 </div>
               </div>
             </div>
             <div className="w-full space-y-[.5rem]">
-              <Input>Lebar Ruangan (m)</Input>
-              <Input>Panjang Ruangan (m)</Input>
-              <Input>Tinggi Ruangan (m)</Input>
+              <Input name="width"
+                value={requiredData?.width !== 0 ? requiredData.width : " "}
+                onChange={handleInputRequirenment}>Lebar Ruangan (m)</Input>
+              <Input name="length"
+                value={requiredData?.length !== 0 ? requiredData.length : " "}
+                onChange={handleInputRequirenment}>Panjang Ruangan (m)</Input>
+              <Input name="hight"
+                value={requiredData?.hight !== 0 ? requiredData.hight : " "}
+                onChange={handleInputRequirenment}>Tinggi Ruangan (m)</Input>
               <div className="flex ">
-              <div className="w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem]">
-                <input
-                  type="file"
-                  name="image"
-                  accept="image/jpeg, image/png"
-                  onChange={handleImageChange}
-                  className="absolute opacity-0 w-full h-full cursor-pointer"
-                  required
-                />
-                <div className="text-black font-medium p-2 rounded flex justify-center content-center">
-                  Masukkan Foto Ruangan
+                <div className="w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem]">
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/jpeg, image/png"
+                    onChange={handleImageChange}
+                    className="absolute opacity-0 w-full h-full cursor-pointer"
+                    required
+                  />
+                  <div className="text-black font-medium p-2 rounded flex justify-center content-center">
+                    Masukkan Foto Ruangan
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          </div>
         </section>
         <section className="py-[1rem]">
-          <Button className="w-full">Mulai</Button>
+          <Button className="w-full" onClick={handleGenerate}>Mulai</Button>
         </section>
         <section className="flex space-x-[1rem]">
-        <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center w-[50%]"/>
-        <div className="w-[25rem] h-[15rem] bg-green-200 rounded-[10px] bg-[url('/section.png')] bg-cover bg-center w-[50%]"/>
+          {
+            imageUrlUploaded ? (
+              <div className="w-[25rem] h-full rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden" >
+                <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full" />
+              </div>
+            ) : (
+              <div className="w-[25rem] h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden bg-gray-200" />
+            )
+          }
+          {/* generated image */}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {imageUrl ? (
+            <img src={imageUrl} alt="Generated" style={{ maxWidth: "100%" }} />
+          ) : (
+            <div className="h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden border border-[#EDEDED]" />
+          )}
+        </section>
+
+        <section>
+          <div>
+            <h2 className="text-[1.5rem] font-semibold py-[1.8rem] text-center">Deskripsi</h2>
+          </div>
+          <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
+            <Markdown>{summary}</Markdown>
+          </article>
         </section>
       </div>
     </div>
