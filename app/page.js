@@ -402,13 +402,14 @@ export default function Home() {
           )}
         </section>
 
-        <section>
-          <div>
+        <section className="w-full justify-around flex">
+          <div className="w-[80%]">
             <h2 className="text-[1.5rem] font-semibold py-[1.8rem] text-center">Deskripsi</h2>
+            <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem] w-full max-w-screen-2xl">
+              <Markdown>{summary}</Markdown>
+            </article>
           </div>
-          <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
-            <Markdown>{summary}</Markdown>
-          </article>
+
         </section>
       </div>
     </div>
