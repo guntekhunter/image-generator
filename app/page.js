@@ -10,6 +10,7 @@ import Button from "../app/component/template/Button"
 import Input from "../app/component/template/Input"
 import Navbar from "../app/component/template/Navbar"
 import ModalBudget from "../app/component/modal/ModalBudget"
+import ModalProduct from "../app/component/modal/ModalProduct"
 
 const formatNumber = (value) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -274,6 +275,7 @@ export default function Home() {
   return (
     <div className="flex justify-around relative">
       <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
+      <ModalProduct />
       <div className="w-[98%] py-[.8rem] z-1">
         <section>
           <div className="bg-[url('/section.png')] bg-cover bg-center rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
