@@ -9,6 +9,7 @@ import Markdown from "markdown-to-jsx";
 import Button from "../app/component/template/Button"
 import Input from "../app/component/template/Input"
 import Navbar from "../app/component/template/Navbar"
+import ModalBudget from "../app/component/modal/ModalBudget"
 
 const formatNumber = (value) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -33,8 +34,10 @@ export default function Home() {
     hight: 0,
     products: [],
     style: "",
+    type: ""
   });
   const [image, setImage] = useState(null);
+  const [isActive, setIsActive] = useState("")
   const [imageUrl, setImageUrl] = useState("");
   const [imageUrlUploaded, setImageUrlUploaded] = useState("");
   const [error, setError] = useState("");
@@ -46,6 +49,7 @@ export default function Home() {
   const [afordable, setAfordable] = useState(0);
   const [budgetAnalysist, setBudgetAnalysist] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [modalBudgetIsOpen, setModalBudgetIsOpen] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -239,114 +243,105 @@ export default function Home() {
   const handleProducts = (e) => {
     setRequiredData((prevData) => {
       if (prevData.products.includes(e)) {
-        return prevData;
+        return {
+          ...prevData,
+          products: prevData.products.filter(product => product !== e),
+        };
+      } else {
+        return {
+          ...prevData,
+          products: [...prevData.products, e],
+        };
       }
-      return {
-        ...prevData,
-        products: [...prevData.products, e],
-      };
     });
+    setIsActive((prevActive) => (prevActive === e ? null : e));
   };
+
+  const handleType = (e) => {
+    setRequiredData({ ...requiredData, ["type"]: e });
+  }
 
   const handleStyle = (e) => {
     setRequiredData({ ...requiredData, ["style"]: e });
   }
   console.log(requiredData)
 
+  const openModalBudget = () => {
+    setModalBudgetIsOpen(!modalBudgetIsOpen)
+    setTimeout(() => setModalBudgetIsOpen(false), 3000);
+  }
+
   return (
-    <div className="flex justify-around">
-      <div className="w-[98%] py-[.8rem]">
+    <div className="flex justify-around relative">
+      <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
+      <div className="w-[98%] py-[.8rem] z-1">
         <section>
           <div className="bg-[url('/section.png')] bg-cover bg-center rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
             <div className="w-[60%] space-y-[1rem] text-white">
               <h1 className="text-[3rem] font-semibold leading-[3.8rem]">Desain Rumah Lebih Mudah Dengan AI</h1>
               <div className="w-[80%] space-y-[1rem]">
-                <p className="leading-[1.8rem]">Pevesindo Menyediakan jasa desian interior dalam hitungan menit  Menggunakan Teknology AI, Desain Rumah Lebih Cepat dan Mudah</p>
+                <p className="leading-[1.8rem]">Pevesindo Menyediakan jasa desain interior dalam hitungan menit  Menggunakan Teknology AI, Desain Rumah Lebih Cepat dan Mudah</p>
                 <div className="bg-white h-[3rem] flex justify-around px-[1.5rem] rounded-[10px]">
                   <input name="budget"
                     value={requiredData?.budget !== 0 ? requiredData.budget : " "}
                     onChange={handleInputRequirenment} className="w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda" />
                 </div>
-                <Button className="w-[10rem]">Mulai</Button>
+                <Button className="w-[10rem]" onClick={openModalBudget}>Mulai</Button>
               </div>
             </div>
           </div>
         </section>
         <section>
-          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
-          <div className="relative w-full overflow-hidden">
-            <div className="w-full h-full grid grid-flow-col gap-[1rem] auto-cols-[25rem] transition-transform duration-300" id="slider">
-              <button onClick={() => handleProducts("wallpanel")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/wallpanel.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
-                <p className="pt-full text-white drop-shadow-xl">Wallpanel WPC</p>
-              </button>
-              <button onClick={() => handleProducts("vinyl")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/vinyl.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
-                <p className="pt-full text-white drop-shadow-xl">Vinyl</p>
-              </button>
-              <button onClick={() => handleProducts("plafon")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/plafon.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
-                <p className="pt-full text-white drop-shadow-xl">Plafon PVC</p>
-              </button>
-              <button onClick={() => handleProducts("uv board")} className="w-[25rem] h-[15rem] rounded-[10px] bg-[url('/marmer.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative" >
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
-                <p className="pt-full text-white drop-shadow-xl">UV Board</p>
-              </button>
-            </div>
-          </div>
-
-        </section>
-        <section>
-          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
+          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Ukuran Ruangan</h2>
           <div className="flex space-x-[1rem]">
             <div className="w-full">
-              <Input>Budget</Input>
+              <Input value={requiredData.budget}>Budget</Input>
               <p className="py-[.5rem]">Pilih Ruangan</p>
               <div className="relative w-full overflow-hidden">
                 <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
-                  <div className="rounded-[10px] bg-[url('/kamar-tidur.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                  <button onClick={(e) => handleType("kamar tidur")} className="rounded-[10px] bg-[url('/kamar-tidur.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "kamar tidur" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Kamar Tidur
                     </p>
-                  </div>
-                  <div className="rounded-[10px] bg-[url('/ruang-keluarga.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                  </button>
+                  <button onClick={(e) => handleType("ruang keluarga")} className="rounded-[10px] bg-[url('/ruang-keluarga.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "ruang keluarga" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Ruang Keluarga
                     </p>
-                  </div>
-                  <div className="rounded-[10px] bg-[url('/ruang-tamu.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                  </button>
+                  <button onClick={(e) => handleType("ruang tamu")} className="rounded-[10px] bg-[url('/ruang-tamu.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "ruang tamu" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Ruang Tamu
                     </p>
-                  </div>
-                  <div className="rounded-[10px] bg-[url('/kantor.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                  </button>
+                  <button onClick={(e) => handleType("kantor")} className="rounded-[10px] bg-[url('/kantor.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "kantor" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Kantor
                     </p>
-                  </div>
+                  </button>
                 </div>
               </div>
               <p className="py-[.5rem]">Pilih Style</p>
               <div className="relative w-full overflow-hidden">
                 <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
                   <button onClick={(e) => handleStyle("Modern")} className="rounded-[10px] bg-[url('/modern.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.style === ("Modern") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">Modern</p>
                   </button>
                   <button onClick={(e) => handleStyle("Industrial")} className="rounded-[10px] bg-[url('/industrial.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.style === ("Industrial") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">Industrial</p>
                   </button>
                   <button onClick={(e) => handleStyle("Japandi")} className="rounded-[10px] bg-[url('/japandi.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.style === ("Japandi") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">Japandi</p>
                   </button>
                   <button onClick={(e) => handleStyle("Scandinavian")} className="rounded-[10px] bg-[url('/scandinavian.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-[10px]" />
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.style === ("Scandinavian") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">Scandinavian</p>
                   </button>
                 </div>
@@ -379,6 +374,30 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
+        <section>
+          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
+          <div className="relative w-full overflow-auto touch-pan-y">
+            <div className="w-full h-full grid grid-flow-col gap-[1rem] auto-cols-[25rem] transition-transform duration-300" id="slider">
+              <button onClick={() => handleProducts("wallpanel")} className={`w-[25rem] h-[15rem] rounded-[10px] bg-[url('/wallpanel.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative`} >
+                <div className={`absolute inset-0 rounded-[10px] ${requiredData.products.includes("wallpanel") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                <p className="pt-full text-white drop-shadow-xl">Wallpanel WPC</p>
+              </button>
+              <button onClick={() => handleProducts("vinyl")} className={`w-[25rem] h-[15rem] rounded-[10px] bg-[url('/vinyl.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative`} >
+                <div className={`absolute inset-0 rounded-[10px] ${requiredData.products.includes("vinyl") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                <p className="pt-full text-white drop-shadow-xl">Vinyl</p>
+              </button>
+              <button onClick={() => handleProducts("plafon")} className={`w-[25rem] h-[15rem] rounded-[10px] bg-[url('/plafon.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative`} >
+                <div className={`absolute inset-0 rounded-[10px] ${requiredData.products.includes("plafon") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                <p className="pt-full text-white drop-shadow-xl">Plafon PVC</p>
+              </button>
+              <button onClick={() => handleProducts("uv board")} className={`w-[25rem] h-[15rem] rounded-[10px] bg-[url('/marmer.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative`} >
+                <div className={`absolute inset-0 rounded-[10px] ${requiredData.products.includes("uv board") ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                <p className="pt-full text-white drop-shadow-xl">UV Board</p>
+              </button>
+            </div>
+          </div>
+
         </section>
         <section className="py-[1rem]">
           <Button className="w-full" onClick={handleGenerate}>Mulai</Button>
