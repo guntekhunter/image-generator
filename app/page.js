@@ -26,7 +26,7 @@ export default function Home() {
     control: "depth",
     steps: 40,
     cfg: 7.5,
-    negative_prompt: "No clouds",
+    negative_prompt: "painting, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime, furniture, decor, objects, people, animals, text, logos, drawings, reflections, shadows, distortions, not realistict",
   });
   const [requiredData, setRequiredData] = useState({
     budget: 0,
@@ -249,6 +249,7 @@ export default function Home() {
           products: prevData.products.filter(product => product !== e),
         };
       } else {
+        openModal()
         return {
           ...prevData,
           products: [...prevData.products, e],
@@ -272,10 +273,11 @@ export default function Home() {
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 
+
   return (
     <div className="flex justify-around relative">
       <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
-      <ModalProduct />
+      <ModalProduct isOpen={isModalOpen} onClose={closeModal} />
       <div className="w-[98%] py-[.8rem] z-1">
         <section>
           <div className="bg-[url('/section.png')] bg-cover bg-center rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
@@ -407,8 +409,8 @@ export default function Home() {
         <section className="flex space-x-[1rem]">
           {
             imageUrlUploaded ? (
-              <div className="w-[25rem] h-full rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden" >
-                <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full" />
+              <div className="w-[25rem] h-[25rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden" >
+                <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full object-cover object-center" />
               </div>
             ) : (
               <div className="w-[25rem] h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden bg-gray-200" />
