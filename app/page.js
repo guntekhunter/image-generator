@@ -51,6 +51,7 @@ export default function Home() {
   const [budgetAnalysist, setBudgetAnalysist] = useState("");
   const [prompt, setPrompt] = useState("");
   const [modalBudgetIsOpen, setModalBudgetIsOpen] = useState(false)
+  const [openedModal, setOpenedModal] = useState("")
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -161,8 +162,7 @@ export default function Home() {
       };
       fetchData(inputText, handleChunk, handleError)
         .then((response) => {
-          setBudgetAnalysist(`response`);
-          console.log("ini responsenya", response);
+          setBudgetAnalysist(`response the style of the room is ${requiredData.style}, the room type is a ${requiredData.type} so only add ${requiredData.products} to the image final design`);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -204,7 +204,6 @@ export default function Home() {
           const blob = new Blob([response.data], { type: "image/png" });
           const imageUrl = URL.createObjectURL(blob);
           setImageUrl(imageUrl);
-          console.log(imageUrl);
           setError("");
         } catch (error) {
           console.log(error);
@@ -219,7 +218,6 @@ export default function Home() {
   useEffect(() => {
     if (budgetAnalysist) {
       const prompter = async (e) => {
-        console.log(prompter);
         try {
           const inputText = budgetAnalysist;
           const data = fetchPrompt(inputText)
@@ -229,8 +227,6 @@ export default function Home() {
             .catch((error) => {
               console.error("Error fetching data:", error);
             });
-
-          console.log(data);
         } catch (error) {
           console.log(error);
         }
@@ -242,6 +238,23 @@ export default function Home() {
   }, [budgetAnalysist]);
 
   const handleProducts = (e) => {
+    setOpenedModal(e)
+    if (requiredData.products.includes("vinyl") || e === "vinyl") {
+      const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+      const dus = vinylCount / 36;
+      const final = Math.ceil(dus) * 300000;
+      const budgetString = requiredData.budget
+      const cleanedBudgetString = budgetString.replace(/\./g, '');
+      const budget = parseInt(cleanedBudgetString, 10);
+      console.log("ini Budget", budget)
+      const finalCount = (budget - final);
+      const formattedFinalCount = finalCount.toLocaleString('id-ID');
+      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+      // setModalBudgetIsOpen(true)
+      // setTimeout(() => setModalBudgetIsOpen(false), 3000);
+    } else {
+      console.log("error count floor");
+    }
     setRequiredData((prevData) => {
       if (prevData.products.includes(e)) {
         return {
@@ -273,11 +286,15 @@ export default function Home() {
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 
+  const saveProductDetail = (e) => {
+    setModalBudgetIsOpen(e)
+    setTimeout(() => setModalBudgetIsOpen(false), 3000);
+  }
 
   return (
     <div className="flex justify-around relative">
       <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
-      <ModalProduct isOpen={isModalOpen} onClose={closeModal} />
+      <ModalProduct isOpen={isModalOpen} onClose={closeModal} save={saveProductDetail} opened={openedModal} />
       <div className="w-[98%] py-[.8rem] z-1">
         <section>
           <div className="bg-[url('/section.png')] bg-cover bg-center rounded-[10px] px-[5rem] pb-[10rem] pt-[5rem]">
@@ -409,8 +426,10 @@ export default function Home() {
         <section className="flex space-x-[1rem]">
           {
             imageUrlUploaded ? (
-              <div className="w-[25rem] h-[25rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden" >
-                <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full object-cover object-center" />
+              <div className="w-[25rem] rounded-[10px] bg-cover bg-center overflow-hidden relative h-[30rem]">
+                <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full object-cover object-center z-0 h-[30rem]" />
+                <Image src="/wallpanel-template.png" width={500} height={500} alt="gambar" className="absolute inset-0 w-[10rem] h-full opacity-90" />
+                <Image src="/floor-template.png" width={500} height={500} alt="gambar" className="absolute bottom-0 w-full h-[20%] opacity-90" />
               </div>
             ) : (
               <div className="w-[25rem] h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden bg-gray-200" />
@@ -436,158 +455,6 @@ export default function Home() {
         </section>
       </div>
     </div>
-    // <div className="space-y-[2rem] flex w-full justify-center py-[2rem] relative">
-    //   <ModalStyle isOpen={isModalOpen} onClose={closeModal} />
-    //   <div className="w-[90%] space-y-[2rem]">
-    //     <h1 className="text-[2rem] font-bold text-center">Selamat Datang</h1>
-    //     {/* the input requirenment of the room */}
-    //     <div className="space-y-[.5rem]">
-    //       <label className="font-bold">Budget</label>
-    //       <input
-    //         type="text"
-    //         name="budget"
-    //         value={requiredData?.budget !== 0 ? requiredData.budget : " "}
-    //         onChange={handleInputRequirenment}
-    //         className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-    //         required
-    //       />
-    //     </div>
-    //     <div className="grid grid-cols-3 gap-4 w-full">
-    //       <div className="space-y-[.5rem]">
-    //         <label className="font-bold">Panjang Ruangan (m)</label>
-    //         <input
-    //           type="text"
-    //           name="width"
-    //           value={requiredData?.width !== 0 ? requiredData.width : " "}
-    //           onChange={handleInputRequirenment}
-    //           className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-    //           required
-    //         />
-    //       </div>
-    //       <div className="space-y-[.5rem]">
-    //         <label className="font-bold">Lebar Ruangan (m)</label>
-    //         <input
-    //           type="text"
-    //           name="length"
-    //           value={requiredData?.length !== 0 ? requiredData.length : " "}
-    //           onChange={handleInputRequirenment}
-    //           className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-    //           required
-    //         />
-    //       </div>
-    //       <div className="space-y-[.5rem]">
-    //         <label className="font-bold">Tinggi Ruangan (m)</label>
-    //         <input
-    //           type="text"
-    //           name="hight"
-    //           value={requiredData?.hight !== 0 ? requiredData.hight : " "}
-    //           onChange={handleInputRequirenment}
-    //           className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-    //           required
-    //         />
-    //       </div>
-    //     </div>
-    //     <div>{afordable}</div>
-    //     {/* products */}
-    //     <div className="flex justify-between">
-    //       <button
-    //         className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
-    //         onClick={() => handleProducts("vinyl")}
-    //       >
-    //         <div className="absolute text-center w-full h-full flex items-center justify-center">
-    //           <p className="font-bold text-white">Vinyl</p>
-    //         </div>
-    //         <Image
-    //           src="/vinyl.jfif"
-    //           width={500}
-    //           height={500}
-    //           className="w-full"
-    //         />
-    //       </button>
-    //       <button
-    //         className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
-    //         onClick={() => handleProducts("wallpanel")}
-    //       >
-    //         <div className="absolute text-center w-full h-full flex items-center justify-center">
-    //           <p className="font-bold text-white">Wall Panel</p>
-    //         </div>
-    //         <Image
-    //           src="/wallpanel.jfif"
-    //           width={500}
-    //           height={500}
-    //           className="w-full"
-    //         />
-    //       </button>
-    //       <button
-    //         className="rounded-full overflow-hidden bg-red-200 w-[15rem] h-[15rem] relative"
-    //         onClick={() => handleProducts("plafon")}
-    //       >
-    //         <div className="absolute text-center w-full h-full flex items-center justify-center">
-    //           <p className="font-bold text-white">Plafon</p>
-    //         </div>
-    //         <Image
-    //           src="/plafon.jpg"
-    //           width={500}
-    //           height={500}
-    //           className="w-full h-full"
-    //         />
-    //       </button>
-    //     </div>
 
-    //     {/* Pilih Style */}
-    //     <div>
-    //       <button
-    //         className="bg-black p-[2rem] text-white rounded-md w-full"
-    //         onClick={openModal}
-    //       >
-    //         Pilih Style
-    //       </button>
-    //     </div>
-    //     {/* <form onSubmit={handleGenerate}> */}
-    //     <div className="flex ">
-    //       <div className="w-full h-[5rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative">
-    //         <input
-    //           type="file"
-    //           name="image"
-    //           accept="image/jpeg, image/png"
-    //           onChange={handleImageChange}
-    //           className="absolute opacity-0 w-full h-full cursor-pointer"
-    //           required
-    //         />
-    //         <div className="text-black font-medium p-2 rounded flex justify-center content-center">
-    //           Drop file atau klik disini
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div className="flex rounded-md space-x-[1rem]">
-    //       <input
-    //         type="text"
-    //         name="prompt"
-    //         value={formData.prompt}
-    //         onChange={handleInputChange}
-    //         className="w-full py-[.5rem] px-[1rem] bg-[#F4F4F4] focus:outline-none focus:ring-0 rounded-md"
-    //         required
-    //       />
-
-    //       <button
-    //         onClick={handleGenerate}
-    //         className="bg-[#D9D9D9] h-stretch px-[1rem] rounded-md"
-    //       >
-    //         Kirim
-    //       </button>
-    //     </div>
-    //     <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
-    //       <Markdown>{summary}</Markdown>
-    //     </article>
-    //     {error && <p style={{ color: "red" }}>{error}</p>}
-    //     {imageUrl && (
-    //       <div>
-    //         <h2>Generated Image:</h2>
-    //         <img src={imageUrl} alt="Generated" style={{ maxWidth: "100%" }} />
-    //       </div>
-    //     )}
-    //   </div>
-    //   {/* </form> */}
-    // </div>
   );
 }

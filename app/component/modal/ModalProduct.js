@@ -5,7 +5,7 @@ import Input from "../template/Input"
 import DropDown from "../template/DropDown"
 import { useState } from "react";
 
-export default function ModalProduct({ isOpen, onClose }) {
+export default function ModalProduct({ isOpen, onClose, save, opened }) {
     const [count, setCount] = useState("")
     const [type, setType] = useState("")
     if (!isOpen) return null;
@@ -27,38 +27,131 @@ export default function ModalProduct({ isOpen, onClose }) {
         { value: 'Stengah', label: 'Stengah' },
     ];
 
-    console.log(type)
+    const saveHandle = () => {
+        save(true)
+        onClose()
+    }
+
     return (
         <div className={`w-full h-[100vh] fixed z-10 flex justify-around pt-[1rem] pb-[5rem] overflow-hidden`}>
             <div className="w-[70%] bg-white p-[2rem] rounded-[10px] border border-gray-200 space-y-[1rem] overflow-y-scroll">
-                <h2 className="font-semibold text-[1.5rem]">Wallpanel</h2>
+                <h2 className="font-semibold text-[1.5rem]">{opened}</h2>
                 <div className=" w-full">
-                    <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
-                        <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
-                            <p className="text-[1rem]">Wallpanel WPC</p>
-                            <div className="w-full justify-center flex">
-                                <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                    {
+                        opened === "vinyl" ? (
+                            <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
+                                    <p className="text-[1rem]">VN-01</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">VN-02</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">VN-03</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
+                                    <p className="text-[1rem]">VN-04</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+
                             </div>
-                        </button>
-                        <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
-                            <p className="text-[1rem]">Vinyl</p>
-                            <div className="w-full justify-center flex">
-                                <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                        ) : opened === "wallpanel" ? (
+                            <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
+                                    <p className="text-[1rem]">WP-01</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">WP-02</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">WP-03</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
+                                    <p className="text-[1rem]">WP-04</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+
                             </div>
-                        </button>
-                        <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
-                            <p className="text-[1rem]">Plafon PVC</p>
-                            <div className="w-full justify-center flex">
-                                <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                        ) : opened === "plafon" ? (
+                            <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
+                                    <p className="text-[1rem]">WP-01</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">WP-02</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">WP-03</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
+                                    <p className="text-[1rem]">WP-04</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+
                             </div>
-                        </button>
-                        <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
-                            <p className="text-[1rem]">UV Board</p>
-                            <div className="w-full justify-center flex">
-                                <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                        ) : (
+                            <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
+                                    <p className="text-[1rem]">WP-01</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">WP-02</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                    <p className="text-[1rem]">WP-03</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
+                                    <p className="text-[1rem]">WP-04</p>
+                                    <div className="w-full justify-center flex">
+                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    </div>
+                                </button>
+
                             </div>
-                        </button>
-                    </div>
+                        )
+                    }
                 </div>
                 <div className="grid grid-cols-2 gap-[.8rem]">
                     <DropDown
@@ -84,7 +177,7 @@ export default function ModalProduct({ isOpen, onClose }) {
                     value=""
                 >Tinggi Ruangan (m)</Input>
                 <div className="flex space-x-[1rem]">
-                    <Button>Simpan</Button>
+                    <Button onClick={saveHandle}>Simpan</Button>
                     <Button onClick={onClose} >Batal</Button>
                 </div>
                 {/* <Input></Input> */}
