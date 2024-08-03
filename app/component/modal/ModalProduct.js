@@ -4,6 +4,7 @@ import Button from "../template/Button"
 import Input from "../template/Input"
 import DropDown from "../template/DropDown"
 import { useState } from "react";
+import mergeImages from 'merge-images';
 
 export default function ModalProduct({ isOpen, onClose, save, opened }) {
     const [count, setCount] = useState("")

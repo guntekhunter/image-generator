@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import mergeImages from 'merge-images';
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ModalStyle from "./component/modal/ModalStyle";
@@ -52,6 +53,7 @@ export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [modalBudgetIsOpen, setModalBudgetIsOpen] = useState(false)
   const [openedModal, setOpenedModal] = useState("")
+  const [combineImageUrl, setCombineImageUrl] = useState("")
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -202,8 +204,8 @@ export default function Home() {
             }
           );
           const blob = new Blob([response.data], { type: "image/png" });
-          const imageUrl = URL.createObjectURL(blob);
-          setImageUrl(imageUrl);
+          const imageUrls = URL.createObjectURL(blob);
+          setImageUrl(imageUrls);
           setError("");
         } catch (error) {
           console.log(error);
@@ -291,6 +293,17 @@ export default function Home() {
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 
+  useEffect(() => {
+    if (imageUrlUploaded) {
+      mergeImages([imageUrlUploaded, '/template-wallpanel.png', '/template-lantai.png'])
+        .then(b64 => {
+          setCombineImageUrl(b64);
+        });
+    } else {
+      console.log("error compile image")
+    }
+  }, [imageUrlUploaded]);
+  console.log("coba", imageUrlUploaded)
   return (
     <div className="flex justify-around relative">
       <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
@@ -424,12 +437,15 @@ export default function Home() {
           <Button className="w-full" onClick={handleGenerate}>Mulai</Button>
         </section>
         <section className="flex space-x-[1rem]">
+          <div>
+            <Image src={combineImageUrl} width={500} height={500} alt="gambar" className="w-full object-cover object-center z-0 h-[30rem]" />
+          </div>
           {
             imageUrlUploaded ? (
               <div className="w-[25rem] rounded-[10px] bg-cover bg-center overflow-hidden relative h-[30rem]">
                 <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full object-cover object-center z-0 h-[30rem]" />
-                <Image src="/wallpanel-template.png" width={500} height={500} alt="gambar" className="absolute inset-0 w-[10rem] h-full opacity-90" />
-                <Image src="/floor-template.png" width={500} height={500} alt="gambar" className="absolute bottom-0 w-full h-[20%] opacity-90" />
+                {/* <Image src="/wallpanel-template.png" width={500} height={500} alt="gambar" className="absolute inset-0 w-[10rem] h-full opacity-90" />
+                <Image src="/floor-template.png" width={500} height={500} alt="gambar" className="absolute bottom-0 w-full h-[20%] opacity-90" /> */}
               </div>
             ) : (
               <div className="w-[25rem] h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden bg-gray-200" />
