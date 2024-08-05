@@ -517,9 +517,9 @@ export default function Home() {
           <Button className="w-full" onClick={handleGenerate}>Mulai</Button>
         </section>
         <section className="flex space-x-[1rem]">
-          <div>
+          {/* <div>
             <Image src={combineImageUrl} width={500} height={500} alt="gambar" className="w-full object-cover object-center z-0 h-[30rem]" />
-          </div>
+          </div> */}
           {
             imageUrlUploaded ? (
               <div className="w-[25rem] rounded-[10px] bg-cover bg-center overflow-hidden relative h-[30rem]">
