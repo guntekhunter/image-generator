@@ -385,7 +385,7 @@ export default function Home() {
   }, [imageUrlUploaded]);
 
   return (
-    <div className="flex justify-around relative">
+    <div className="flex justify-around relative scroll-smooth md:scroll-auto">
       <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
       <ModalProduct isOpen={isModalOpen} onClose={closeModal} save={saveProductDetail} opened={openedModal} />
       <div className="w-[98%] py-[.8rem] z-1">
