@@ -319,6 +319,7 @@ export default function Home() {
       console.log("error count floor");
     }
     openModal()
+    console.log("masa berhasil")
     setIsActive((prevActive) => (prevActive === e ? null : e));
   };
 
