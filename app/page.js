@@ -185,111 +185,98 @@ export default function Home() {
   };
 
   useEffect(() => {
-    //   const data = new FormData();
-    //   const blob = base64ToBlob(combineImageUrl, 'image/png');
-    //   data.append("prompt", prompt);
-    //   data.append("style_id", String(formData.style_id));
-    //   data.append("image", blob, 'combined-image.png');
-    //   if (formData.seed) data.append("seed", String(formData.seed));
-    //   if (formData.aspect_ratio) data.append("aspect_ratio", formData.aspect_ratio);
-    //   if (formData.strength) data.append("strength", String(formData.strength));
-    //   if (formData.control) data.append("control", formData.control);
-    //   if (formData.steps) data.append("steps", String(formData.steps));
-    //   if (formData.cfg) data.append("cfg", String(formData.cfg));
-    //   if (formData.negative_prompt) data.append("negative_prompt", formData.negative_prompt);
-
-    //   // const data = new FormData();
-    //   // data.append("prompt", prompt);
-    //   // data.append("style_id", String(formData.style_id));
-    //   // if (image) data.append("image", image);
-    //   // if (formData.seed) data.append("seed", String(formData.seed));
-    //   // if (formData.aspect_ratio)
-    //   //   data.append("aspect_ratio", formData.aspect_ratio);
-    //   // if (formData.strength) data.append("strength", String(formData.strength));
-    //   // if (formData.control) data.append("control", formData.control);
-    //   // if (formData.steps) data.append("steps", String(formData.steps));
-    //   // if (formData.cfg) data.append("cfg", String(formData.cfg));
-    //   // if (formData.negative_prompt)
-    //   //   data.append("negative_prompt", formData.negative_prompt);
-    //   // console.log("ini bede", data);
-    //   if (prompt) {
-    //     const generate = async () => {
-    //       try {
-    //         const response = await axios.post(
-    //           "https://api.vyro.ai/v1/imagine/api/edits/remix",
-    //           data,
-    //           {
-    //             headers: {
-    //               Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
-    //               "Content-Type": "multipart/form-data",
-    //             },
-    //             responseType: "arraybuffer",
-    //           }
-    //         );
-    //         const blob = new Blob([response.data], { type: "image/png" });
-    //         const imageUrls = URL.createObjectURL(blob);
-    //         setImageUrl(imageUrls);
-    //         setError("");
-    //       } catch (error) {
-    //         console.log(error);
-    //       }
-    //     };
-    //     generate();
-    //   } else {
-    //     console.log(error);
-    //   }
-    // }, [prompt]);
-
-    if (combineImageUrl && prompt) {
-      try {
-        const data = new FormData();
-        const blob = base64ToBlob(combineImageUrl, 'image/png');
-        data.append("prompt", prompt);
-        data.append("style_id", String(formData.style_id));
-        data.append("image", blob, 'combined-image.png');
-        if (formData.seed) data.append("seed", String(formData.seed));
-        if (formData.aspect_ratio) data.append("aspect_ratio", formData.aspect_ratio);
-        if (formData.strength) data.append("strength", String(formData.strength));
-        if (formData.control) data.append("control", formData.control);
-        if (formData.steps) data.append("steps", String(formData.steps));
-        if (formData.cfg) data.append("cfg", String(formData.cfg));
-        if (formData.negative_prompt) data.append("negative_prompt", formData.negative_prompt);
-
-        console.log("FormData before sending:", data);
-
-        const generate = async () => {
-          try {
-            const response = await axios.post(
-              "https://api.vyro.ai/v1/imagine/api/edits/remix",
-              data,
-              {
-                headers: {
-                  Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
-                  "Content-Type": "multipart/form-data",
-                },
-                responseType: "arraybuffer",
-              }
-            );
-            const blob = new Blob([response.data], { type: "image/png" });
-            const imageUrls = URL.createObjectURL(blob);
-            setImageUrl(imageUrls);
-            setError("");
-          } catch (error) {
-            console.log('Error generating image:', error);
-            setError("Error generating image");
-          }
-        };
-        generate();
-      } catch (error) {
-        console.log('Error processing image data:', error);
-        setError("Error processing image data");
-      }
+    const data = new FormData();
+    data.append("prompt", prompt);
+    data.append("style_id", String(formData.style_id));
+    if (image) data.append("image", image);
+    if (formData.seed) data.append("seed", String(formData.seed));
+    if (formData.aspect_ratio)
+      data.append("aspect_ratio", formData.aspect_ratio);
+    if (formData.strength) data.append("strength", String(formData.strength));
+    if (formData.control) data.append("control", formData.control);
+    if (formData.steps) data.append("steps", String(formData.steps));
+    if (formData.cfg) data.append("cfg", String(formData.cfg));
+    if (formData.negative_prompt)
+      data.append("negative_prompt", formData.negative_prompt);
+    console.log("ini bede", data);
+    if (prompt) {
+      const generate = async () => {
+        try {
+          const response = await axios.post(
+            "https://api.vyro.ai/v1/imagine/api/edits/remix",
+            data,
+            {
+              headers: {
+                Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
+                "Content-Type": "multipart/form-data",
+              },
+              responseType: "arraybuffer",
+            }
+          );
+          const blob = new Blob([response.data], { type: "image/png" });
+          const imageUrls = URL.createObjectURL(blob);
+          setImageUrl(imageUrls);
+          setError("");
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      generate();
     } else {
-      if (!prompt) {
-        console.log("Error: prompt is missing");
-      }
+      console.log(error);
     }
-  }, [combineImageUrl, prompt]);
+  }, [prompt]);
+
+  //   if (combineImageUrl && prompt) {
+  //     try {
+  //       const data = new FormData();
+  //       const blob = base64ToBlob(combineImageUrl, 'image/png');
+  //       data.append("prompt", prompt);
+  //       data.append("style_id", String(formData.style_id));
+  //       data.append("image", blob, 'combined-image.png');
+  //       if (formData.seed) data.append("seed", String(formData.seed));
+  //       if (formData.aspect_ratio) data.append("aspect_ratio", formData.aspect_ratio);
+  //       if (formData.strength) data.append("strength", String(formData.strength));
+  //       if (formData.control) data.append("control", formData.control);
+  //       if (formData.steps) data.append("steps", String(formData.steps));
+  //       if (formData.cfg) data.append("cfg", String(formData.cfg));
+  //       if (formData.negative_prompt) data.append("negative_prompt", formData.negative_prompt);
+
+  //       console.log("FormData before sending:", data);
+
+  //       const generate = async () => {
+  //         try {
+  //           const response = await axios.post(
+  //             "https://api.vyro.ai/v1/imagine/api/edits/remix",
+  //             data,
+  //             {
+  //               headers: {
+  //                 Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
+  //                 "Content-Type": "multipart/form-data",
+  //               },
+  //               responseType: "arraybuffer",
+  //             }
+  //           );
+  //           const blob = new Blob([response.data], { type: "image/png" });
+  //           const imageUrls = URL.createObjectURL(blob);
+  //           setImageUrl(imageUrls);
+  //           setError("");
+  //         } catch (error) {
+  //           console.log('Error generating image:', error);
+  //           setError("Error generating image");
+  //         }
+  //       };
+  //       generate();
+  //     } catch (error) {
+  //       console.log('Error processing image data:', error);
+  //       setError("Error processing image data");
+  //     }
+  //   } else {
+  //     if (!prompt) {
+  //       console.log("Error: prompt is missing");
+  //     }
+  //   }
+  // }, [combineImageUrl, prompt]);
 
   useEffect(() => {
     if (budgetAnalysist) {
@@ -331,20 +318,7 @@ export default function Home() {
     } else {
       console.log("error count floor");
     }
-    setRequiredData((prevData) => {
-      if (prevData.products.includes(e)) {
-        return {
-          ...prevData,
-          products: prevData.products.filter(product => product !== e),
-        };
-      } else {
-        openModal()
-        return {
-          ...prevData,
-          products: [...prevData.products, e],
-        };
-      }
-    });
+    openModal()
     setIsActive((prevActive) => (prevActive === e ? null : e));
   };
 
@@ -362,8 +336,21 @@ export default function Home() {
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 
-  const saveProductDetail = (e) => {
-    setModalBudgetIsOpen(e)
+  const saveProductDetail = (status, productName) => {
+    setModalBudgetIsOpen(status)
+    setRequiredData((prevData) => {
+      if (prevData.products.includes(productName)) {
+        return {
+          ...prevData,
+          products: prevData.products.filter(product => product !== productName),
+        };
+      } else {
+        return {
+          ...prevData,
+          products: [...prevData.products, productName],
+        };
+      }
+    });
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 

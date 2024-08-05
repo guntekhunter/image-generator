@@ -29,7 +29,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
     ];
 
     const saveHandle = () => {
-        save(true)
+        save(true, opened)
         onClose()
     }
 
@@ -42,27 +42,27 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                         opened === "vinyl" ? (
                             <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
-                                    <p className="text-[1rem]">VN-01</p>
-                                    <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    <p className="text-[1rem]">HD-01</p>
+                                    <div className="w-full justify-center flex py-[1rem]">
+                                        <Image src="/lantai vinyl/1.png" alt="" width={500} height={500} className="w-[3.5rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
-                                    <p className="text-[1rem]">VN-02</p>
-                                    <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    <p className="text-[1rem]">HD-02</p>
+                                    <div className="w-full justify-center flex py-[1rem]">
+                                        <Image src="/lantai vinyl/2.png" alt="" width={500} height={500} className="w-[3.5rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
-                                    <p className="text-[1rem]">VN-03</p>
-                                    <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    <p className="text-[1rem]">HD-03</p>
+                                    <div className="w-full justify-center flex py-[1rem]">
+                                        <Image src="/lantai vinyl/3.png" alt="" width={500} height={500} className="w-[3.5rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
-                                    <p className="text-[1rem]">VN-04</p>
-                                    <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                    <p className="text-[1rem]">HD-04</p>
+                                    <div className="w-full justify-center flex py-[1rem]">
+                                        <Image src="/lantai vinyl/4.png" alt="" width={500} height={500} className="w-[3.5rem]" />
                                     </div>
                                 </button>
 
@@ -72,25 +72,25 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
                                     <p className="text-[1rem]">WP-01</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
                                     <p className="text-[1rem]">WP-02</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
                                     <p className="text-[1rem]">WP-03</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
                                     <p className="text-[1rem]">WP-04</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
 
@@ -98,55 +98,55 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                         ) : opened === "plafon" ? (
                             <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
-                                    <p className="text-[1rem]">WP-01</p>
+                                    <p className="text-[1rem]">NP-01</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/plafon pvc/1.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
-                                    <p className="text-[1rem]">WP-02</p>
+                                    <p className="text-[1rem]">NP-02</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/plafon pvc/2.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
-                                    <p className="text-[1rem]">WP-03</p>
+                                    <p className="text-[1rem]">NP-03</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/plafon pvc/3.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
-                                    <p className="text-[1rem]">WP-04</p>
+                                    <p className="text-[1rem]">NP-04</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/plafon pvc/4.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
 
                             </div>
                         ) : (
                             <div className="w-full grid grid-cols-4 gap-[.8rem]" id="slider">
-                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] place-items-start`} >
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start`} >
                                     <p className="text-[1rem]">WP-01</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/uv board/1.png" alt="" width={500} height={500} className="w-[8rem] pb-[2rem]" />
                                     </div>
                                 </button>
-                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem]`} >
                                     <p className="text-[1rem]">WP-02</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/uv board/2.png" alt="" width={500} height={500} className="w-[8rem] pb-[2rem]" />
                                     </div>
                                 </button>
-                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem]`} >
                                     <p className="text-[1rem]">WP-03</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/uv board/3.png" alt="" width={500} height={500} className="w-[8rem] pb-[2rem]" />
                                     </div>
                                 </button>
-                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
+                                <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] items-first`} >
                                     <p className="text-[1rem]">WP-04</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/uv board/4.png" alt="" width={500} height={500} className="w-[8rem] pb-[2rem]" />
                                     </div>
                                 </button>
 
@@ -154,29 +154,37 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                         )
                     }
                 </div>
-                <div className="grid grid-cols-2 gap-[.8rem]">
-                    <DropDown
-                        onChange={handleChange}
-                        value={count}
-                        name="dropdown"
-                        className="custom-dropdown"
-                        options={options}
-                    >
-                        Jumlah Dinding
-                    </DropDown>
-                    <DropDown
-                        onChange={handleChangeType}
-                        value={type}
-                        name="dropdown"
-                        className="custom-dropdown"
-                        options={typeOptions}
-                    >
-                        Type Wallpanel
-                    </DropDown>
-                </div>
-                <Input name="hight" className={`${type === "Stengah" ? "block" : "hidden"}`}
-                    value=""
-                >Tinggi Ruangan (m)</Input>
+                {
+                    opened === "wallpanel" ? (
+                        <>
+                            <div className="grid grid-cols-2 gap-[.8rem]">
+                                <DropDown
+                                    onChange={handleChange}
+                                    value={count}
+                                    name="dropdown"
+                                    className="custom-dropdown"
+                                    options={options}
+                                >
+                                    Jumlah Dinding
+                                </DropDown>
+                                <DropDown
+                                    onChange={handleChangeType}
+                                    value={type}
+                                    name="dropdown"
+                                    className="custom-dropdown"
+                                    options={typeOptions}
+                                >
+                                    Type Wallpanel
+                                </DropDown>
+                            </div>
+                            <Input name="hight" className={`${type === "Stengah" ? "block" : "hidden"}`}
+                                value=""
+                            >Tinggi Ruangan (m)</Input>
+                        </>
+                    ) : (
+                        <></>
+                    )
+                }
                 <div className="flex space-x-[1rem]">
                     <Button onClick={saveHandle}>Simpan</Button>
                     <Button onClick={onClose} >Batal</Button>
