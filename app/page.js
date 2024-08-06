@@ -12,6 +12,7 @@ import Input from "../app/component/template/Input"
 import Navbar from "../app/component/template/Navbar"
 import ModalBudget from "../app/component/modal/ModalBudget"
 import ModalProduct from "../app/component/modal/ModalProduct"
+import { CldUploadWidget } from 'next-cloudinary';
 
 const formatNumber = (value) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -184,48 +185,102 @@ export default function Home() {
     }
   };
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   useEffect(() => {
-    const data = new FormData();
-    data.append("prompt", prompt);
-    data.append("style_id", String(formData.style_id));
-    if (image) data.append("image", image);
-    if (formData.seed) data.append("seed", String(formData.seed));
-    if (formData.aspect_ratio)
-      data.append("aspect_ratio", formData.aspect_ratio);
-    if (formData.strength) data.append("strength", String(formData.strength));
-    if (formData.control) data.append("control", formData.control);
-    if (formData.steps) data.append("steps", String(formData.steps));
-    if (formData.cfg) data.append("cfg", String(formData.cfg));
-    if (formData.negative_prompt)
-      data.append("negative_prompt", formData.negative_prompt);
-    console.log("ini bede", data);
-    if (prompt) {
-      const generate = async () => {
-        try {
-          const response = await axios.post(
-            "https://api.vyro.ai/v1/imagine/api/edits/remix",
-            data,
-            {
-              headers: {
-                Authorization: `Bearer vk-lh8QrDyb4Cjw2aTCqUCsu8Jnq4zM9Oic396VBSZNrgZmID`, // Replace with your actual API token
-                "Content-Type": "multipart/form-data",
-              },
-              responseType: "arraybuffer",
-            }
-          );
-          const blob = new Blob([response.data], { type: "image/png" });
-          const imageUrls = URL.createObjectURL(blob);
-          setImageUrl(imageUrls);
-          setError("");
-        } catch (error) {
-          console.log(error);
+    const sendRequest = async () => {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
+          prompt: prompt,
+          negative_prompt: formData.negative_prompt || "bad quality",
+          init_image: imageUrlUploaded,
+          width: "512",
+          height: "512",
+          samples: "1",
+          temp: false,
+          safety_checker: false,
+          strength: formData.strength || 0.7,
+          seed: formData.seed || null,
+          webhook: null,
+          track_id: null
+        });
+
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      };
-      generate();
+
+        const result = await response.json();
+        console.log(result);
+
+        const fetchUrl = result.fetch_result;
+
+        const pollForImage = async (url) => {
+          let attempts = 0;
+          const maxAttempts = 10;
+
+          while (attempts < maxAttempts) {
+            try {
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const data = await response.json();
+
+              if (data.status !== 'processing') {
+                if (data.future_links && data.future_links.length > 0) {
+                  setImageUrl(data.future_links[0]);
+                } else {
+                  throw new Error('No future links found in the response');
+                }
+                return;
+              }
+            } catch (error) {
+              console.error('Polling error', error);
+            }
+
+            attempts++;
+            await new Promise(resolve => setTimeout(resolve, 1000)); // wait 1 second before polling again
+          }
+
+          setError("Image processing timed out");
+        };
+
+        pollForImage(fetchUrl);
+
+      } catch (error) {
+        console.log('error', error);
+        setError("An error occurred");
+      }
+    };
+
+    if (prompt) {
+      sendRequest();
     } else {
       console.log(error);
     }
-  }, [prompt]);
+  }, [prompt, imageUrlUploaded, formData]);
+
 
   //   if (combineImageUrl && prompt) {
   //     try {
@@ -473,14 +528,17 @@ export default function Home() {
                 onChange={handleInputRequirenment}>Tinggi Ruangan (m)</Input>
               <div className="flex ">
                 <div className="w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem]">
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/jpeg, image/png"
-                    onChange={handleImageChange}
-                    className="absolute opacity-0 w-full h-full cursor-pointer"
-                    required
-                  />
+                  <CldUploadWidget uploadPreset="pevesindo" onSuccess={(results) => {
+                    setImageUrlUploaded(results?.info.url)
+                  }}>
+                    {({ open }) => {
+                      return (
+                        <button className="button" onClick={() => open()}>
+                          Upload
+                        </button>
+                      );
+                    }}
+                  </CldUploadWidget>
                   <div className="text-black font-medium p-2 rounded flex justify-center content-center">
                     Masukkan Foto Ruangan
                   </div>
@@ -534,7 +592,7 @@ export default function Home() {
           {/* generated image */}
           {error && <p style={{ color: "red" }}>{error}</p>}
           {imageUrl ? (
-            <img src={imageUrl} alt="Generated" style={{ maxWidth: "100%" }} />
+            <Image src={imageUrl} width={500} height={500} alt="gambar" />
           ) : (
             <div className="h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden border border-[#EDEDED]" />
           )}
