@@ -301,26 +301,43 @@ export default function Home() {
   }, [budgetAnalysist]);
 
   const handleProducts = (e) => {
-    setOpenedModal(e)
-    if (requiredData.products.includes("vinyl") || e === "vinyl") {
-      const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
-      const dus = vinylCount / 36;
-      const final = Math.ceil(dus) * 300000;
-      const budgetString = requiredData.budget
-      const cleanedBudgetString = budgetString.replace(/\./g, '');
-      const budget = parseInt(cleanedBudgetString, 10);
-      console.log("ini Budget", budget)
-      const finalCount = (budget - final);
-      const formattedFinalCount = finalCount.toLocaleString('id-ID');
-      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
-      // setModalBudgetIsOpen(true)
-      // setTimeout(() => setModalBudgetIsOpen(false), 3000);
+    console.log("ini product", e)
+    if (requiredData.products.includes(e)) {
+      setRequiredData((prevData) => {
+        if (prevData.products.includes(e)) {
+          return {
+            ...prevData,
+            products: prevData.products.filter(product => product !== e),
+          };
+        } else {
+          return {
+            ...prevData,
+            products: [...prevData.products, e],
+          };
+        }
+      });
     } else {
-      console.log("error count floor");
+      setOpenedModal(e)
+      if (requiredData.products.includes("vinyl") || e === "vinyl") {
+        const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+        const dus = vinylCount / 36;
+        const final = Math.ceil(dus) * 300000;
+        const budgetString = requiredData.budget
+        const cleanedBudgetString = budgetString.replace(/\./g, '');
+        const budget = parseInt(cleanedBudgetString, 10);
+        console.log("ini Budget", budget)
+        const finalCount = (budget - final);
+        const formattedFinalCount = finalCount.toLocaleString('id-ID');
+        setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+        // setModalBudgetIsOpen(true)
+        // setTimeout(() => setModalBudgetIsOpen(false), 3000);
+      } else {
+        console.log("error count floor");
+      }
+      openModal()
+      setIsActive((prevActive) => (prevActive === e ? null : e));
     }
-    openModal()
-    console.log("ommaleka")
-    setIsActive((prevActive) => (prevActive === e ? null : e));
+
   };
 
   const handleType = (e) => {
@@ -338,6 +355,7 @@ export default function Home() {
   }
 
   const saveProductDetail = (status, productName) => {
+    console.log("save")
     setModalBudgetIsOpen(status)
     setRequiredData((prevData) => {
       if (prevData.products.includes(productName)) {
@@ -366,9 +384,8 @@ export default function Home() {
     }
   }, [imageUrlUploaded]);
 
-  console.log(image, imageUrlUploaded)
   return (
-    <div className="flex justify-around relative">
+    <div className="flex justify-around relative scroll-smooth md:scroll-auto">
       <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
       <ModalProduct isOpen={isModalOpen} onClose={closeModal} save={saveProductDetail} opened={openedModal} />
       <div className="w-[98%] py-[.8rem] z-1">
@@ -500,9 +517,9 @@ export default function Home() {
           <Button className="w-full" onClick={handleGenerate}>Mulai</Button>
         </section>
         <section className="flex space-x-[1rem]">
-          <div>
+          {/* <div>
             <Image src={combineImageUrl} width={500} height={500} alt="gambar" className="w-full object-cover object-center z-0 h-[30rem]" />
-          </div>
+          </div> */}
           {
             imageUrlUploaded ? (
               <div className="w-[25rem] rounded-[10px] bg-cover bg-center overflow-hidden relative h-[30rem]">
