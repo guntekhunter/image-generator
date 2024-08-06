@@ -9,6 +9,7 @@ export default function Navbar(props) {
         const handleScroll = () => {
             if (window.scrollY > 0) {
                 setIsScrolled(true);
+                console.log("uhuy")
             } else {
                 setIsScrolled(false);
             }
