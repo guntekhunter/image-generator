@@ -1,15 +1,15 @@
+// pages/api/fetch/[id].js
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
     const reqBody = await req.json();
-    const apiUrl = 'https://modelslab.com/api/v6/realtime/img2img';
+    const apiUrl = `https://modelslab.com/api/v6/realtime/fetch/${id}`;
 
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify(reqBody),
         });
@@ -20,11 +20,6 @@ export async function POST(req) {
             data: data,
         });
     } catch (error) {
-        return NextResponse.json({
-            success: false,
-            error: 'Internal Server Error',
-        }, {
-            status: 500,
-        });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }

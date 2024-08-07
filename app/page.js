@@ -81,7 +81,6 @@ export default function Home() {
       const numericValue = value.replace(/\./g, ""); // Remove existing dots
       const formattedValue = formatNumber(numericValue);
       setRequiredData({ ...requiredData, [name]: formattedValue });
-      console.log(formattedValue);
     } else if (
       e.target.name === "width" ||
       e.target.name === "length" ||
@@ -185,14 +184,6 @@ export default function Home() {
     }
   };
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  };
 
   useEffect(() => {
     const sendRequest = async () => {
@@ -201,7 +192,7 @@ export default function Home() {
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
-          key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
+          key: "QwVAtdPWaATRFuq0YF2JT6DJqDKVjmPtoyZmg7dwD1DmZn01kkEzDzvr9aIb",
           prompt: prompt,
           negative_prompt: formData.negative_prompt || "bad quality",
           init_image: imageUrlUploaded,
@@ -223,34 +214,62 @@ export default function Home() {
           redirect: 'follow'
         };
 
-        const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
+        const response = await fetch("/api/image-generator-v2", requestOptions);
+        console.log("inimi responsenya", response)
+        console.log("inimi responsenya", response.data)
+        const data = await response.json();
+        console.log(data)
+        if (data.data.status === "processing") {
+          const idFetch = data.data.id;
 
+          // Polling function
+          const pollForImage = async () => {
+            try {
+              const pollInterval = 5000; // Poll every 5 seconds
+              const polling = setInterval(async () => {
+                const rawFetch = JSON.stringify({
+                  key: "QwVAtdPWaATRFuq0YF2JT6DJqDKVjmPtoyZmg7dwD1DmZn01kkEzDzvr9aIb",
+                });
 
-        const idFetch = response.id
-        if (response.status === "processing") {
-          const rawFetch = JSON.stringify({
-            key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
-          })
+                const requestOptionsFetch = {
+                  method: 'POST',
+                  headers: myHeaders,
+                  body: rawFetch,
+                  redirect: 'follow'
+                };
 
-          const requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: rawFetch,
-            redirect: 'follow'
+                const responseFetch = await fetch(`https://modelslab.com/api/v6/realtime/fetch/${idFetch}`, requestOptionsFetch);
+
+                const dataImage = await responseFetch.json();
+                console.log(dataImage)
+                if (dataImage.status) {
+                  if (dataImage.status === 'success') {
+                    setImageUrl(dataImage.output[0]);
+                    console.log(dataImage.output[0]);
+                    clearInterval(polling);
+                  } else if (dataImage.status === 'processing') {
+                    console.log('Processing... Please wait.');
+                  }
+                } else {
+                  setError('Error fetching image status.');
+                  clearInterval(polling);
+                }
+              }, pollInterval);
+            } catch (error) {
+              console.log('Polling error', error);
+              setError('Error during polling.');
+            }
           };
 
-          const response = await fetch(`https://modelslab.com/api/v6/realtime/fetch/${idFetch}`, requestOptions);
-
-          console.log(response.output[0])
-          setImageUrl(response.output[0])
-          console.log(response.id)
+          pollForImage();
+        } else if (data.data.status === "seccess") {
+          setImageUrl(data.data.output[0]);
+          console.log(data.data.output[0]);
         } else {
-          console.log(error)
+          console.log(data.error);
         }
-
-
       } catch (error) {
-        console.log('error', error);
+        console.log('Error', error);
         setError("An error occurred");
       }
     };
@@ -258,9 +277,114 @@ export default function Home() {
     if (prompt) {
       sendRequest();
     } else {
-      console.log(error);
+      console.log('No prompt provided.');
     }
   }, [prompt, imageUrlUploaded, formData]);
+
+  //       const idFetch = (data.data.id)
+
+  //       if (data.data.status === "processing") {
+  //         const rawFetch = JSON.stringify({
+  //           key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
+  //         });
+
+  //         const requestOptionsFetch = {
+  //           method: 'POST',
+  //           headers: myHeaders,
+  //           body: rawFetch,
+  //           redirect: 'follow'
+  //         };
+
+  //         const responseFetch = await fetch(`https://modelslab.com/api/v6/realtime/fetch/${idFetch}`, requestOptionsFetch);
+  //         // const datanya = await responseFetch.json();
+  //         console.log(responseFetch)
+  //         console.log(responseFetch.data.output[0]);
+  //         setImageUrl(responseFetch.data.output[0]);
+  //         console.log(fetchData.id);
+  //       } else {
+  //         console.log(data.error);
+  //       }
+  //     } catch (error) {
+  //       console.log('error', error);
+  //       setError("An error occurred");
+  //     }
+  //   };
+
+  //   if (prompt) {
+  //     sendRequest();
+  //   } else {
+  //     console.log(error);
+  //   }
+  // }, [prompt, imageUrlUploaded, formData]);
+
+  // fetching is working
+  // useEffect(() => {
+  //   const sendRequest = async () => {
+  //     try {
+  //       const myHeaders = new Headers();
+  //       myHeaders.append("Content-Type", "application/json");
+
+  //       const raw = JSON.stringify({
+  //         key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
+  //         prompt: prompt,
+  //         negative_prompt: formData.negative_prompt || "bad quality",
+  //         init_image: imageUrlUploaded,
+  //         width: "512",
+  //         height: "512",
+  //         samples: "1",
+  //         temp: false,
+  //         safety_checker: false,
+  //         strength: formData.strength || 0.7,
+  //         seed: formData.seed || null,
+  //         webhook: null,
+  //         track_id: null
+  //       });
+
+  //       const requestOptions = {
+  //         method: 'POST',
+  //         headers: myHeaders,
+  //         body: raw,
+  //         redirect: 'follow'
+  //       };
+
+  //       const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
+
+
+  //       const idFetch = response.id
+  //       if (response.status === "processing") {
+  //         const rawFetch = JSON.stringify({
+  //           key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
+  //         })
+
+  //         const requestOptions = {
+  //           method: 'POST',
+  //           headers: myHeaders,
+  //           body: rawFetch,
+  //           redirect: 'follow'
+  //         };
+
+  //         const response = await fetch(`https://modelslab.com/api/v6/realtime/fetch/${idFetch}`, requestOptions);
+
+  //         console.log(response.output[0])
+  //         setImageUrl(response.output[0])
+  //         console.log(response.id)
+  //       } else {
+  //         console.log(error)
+  //       }
+
+
+  //     } catch (error) {
+  //       console.log('error', error);
+  //       setError("An error occurred");
+  //     }
+  //   };
+
+  //   if (prompt) {
+  //     sendRequest();
+  //   } else {
+  //     console.log(error);
+  //   }
+  // }, [prompt, imageUrlUploaded, formData]);
 
 
   //   if (combineImageUrl && prompt) {
@@ -391,7 +515,6 @@ export default function Home() {
   }
 
   const saveProductDetail = (status, productName) => {
-    console.log("save")
     setModalBudgetIsOpen(status)
     setRequiredData((prevData) => {
       if (prevData.products.includes(productName)) {
@@ -561,7 +684,7 @@ export default function Home() {
           </div> */}
           {
             imageUrlUploaded ? (
-              <div className="w-[25rem] rounded-[10px] bg-cover bg-center overflow-hidden relative h-[30rem]">
+              <div className="w-full rounded-[10px] bg-cover bg-center overflow-hidden relative h-[30rem]">
                 <Image src={imageUrlUploaded} width={500} height={500} alt="gambar" className="w-full object-cover object-center z-0 h-[30rem]" />
                 {/* <Image src="/wallpanel-template.png" width={500} height={500} alt="gambar" className="absolute inset-0 w-[10rem] h-full opacity-90" />
                 <Image src="/floor-template.png" width={500} height={500} alt="gambar" className="absolute bottom-0 w-full h-[20%] opacity-90" /> */}
@@ -573,7 +696,7 @@ export default function Home() {
           {/* generated image */}
           {error && <p style={{ color: "red" }}>{error}</p>}
           {imageUrl ? (
-            <Image src={imageUrl} width={500} height={500} alt="gambar" />
+            <Image src={imageUrl} width={500} height={500} alt="gambar" className="w-full" />
           ) : (
             <div className="h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden border border-[#EDEDED]" />
           )}
