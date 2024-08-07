@@ -225,48 +225,29 @@ export default function Home() {
 
         const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+
+        const idFetch = response.id
+        if (response.status === "processing") {
+          const rawFetch = JSON.stringify({
+            key: "gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv",
+          })
+
+          const requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: rawFetch,
+            redirect: 'follow'
+          };
+
+          const response = await fetch(`https://modelslab.com/api/v6/realtime/fetch/${idFetch}`, requestOptions);
+
+          console.log(response.output[0])
+          setImageUrl(response.output[0])
+          console.log(response.id)
+        } else {
+          console.log(error)
         }
 
-        const result = await response.json();
-        console.log(result);
-
-        const fetchUrl = result.fetch_result;
-
-        const pollForImage = async (url) => {
-          let attempts = 0;
-          const maxAttempts = 10;
-
-          while (attempts < maxAttempts) {
-            try {
-              const response = await fetch(url);
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-
-              const data = await response.json();
-
-              if (data.status !== 'processing') {
-                if (data.future_links && data.future_links.length > 0) {
-                  setImageUrl(data.future_links[0]);
-                } else {
-                  throw new Error('No future links found in the response');
-                }
-                return;
-              }
-            } catch (error) {
-              console.error('Polling error', error);
-            }
-
-            attempts++;
-            await new Promise(resolve => setTimeout(resolve, 1000)); // wait 1 second before polling again
-          }
-
-          setError("Image processing timed out");
-        };
-
-        pollForImage(fetchUrl);
 
       } catch (error) {
         console.log('error', error);

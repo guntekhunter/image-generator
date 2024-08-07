@@ -1,43 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+// pages/api/proxy.js
 
-export async function POST(req) {
-    const { prompt, imagePath } = await req.json();
-    try {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+export default async function handler(req, res) {
+    const { method } = req;
 
-        const raw = JSON.stringify({
-            key,
-            prompt,
-            negative_prompt,
-            init_image,
-            width,
-            height,
-            samples,
-            temp,
-            safety_checker,
-            strength,
-            seed,
-            webhook,
-            track_id
-        });
-
-        const requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        };
+    if (method === 'POST') {
+        const apiUrl = 'https://modelslab.com/api/v6/realtime/img2img';
+        const apiKey = 'gxc4b7xeac7vspDFHiQpXbptRyhbZYECun0yPPT71gxMLjl6yqzwb4HDwDDv';
 
         try {
-            const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
-            const result = await response.text();
-            res.status(200).json({ result });
-        } catch (error) {
-            res.status(500).json({ error: 'Error generating image' });
-        }
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify(req.body),
+            });
 
-    } catch (error) {
-        console.log(error)
+            const data = await response.json();
+            res.status(response.status).json(data);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    } else {
+        res.setHeader('Allow', ['POST']);
+        res.status(405).end(`Method ${method} Not Allowed`);
     }
 }
