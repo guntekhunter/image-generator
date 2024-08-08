@@ -23,7 +23,8 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/api/image-generator/route.js"
+    "app/api/image-generator/route.js",
+    "app/api/image-generator-v2/route.js"
   ],
   "exclude": ["node_modules"]
 }
