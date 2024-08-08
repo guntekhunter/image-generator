@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
     const reqBody = await req.json();
-    const apiUrl = 'https://modelslab.com/api/v6/realtime/img2img';
+    const apiUrl = 'https://modelslab.com/api/v5/interior';
 
     try {
         const response = await fetch(apiUrl, {

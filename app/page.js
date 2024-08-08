@@ -204,7 +204,9 @@ export default function Home() {
           strength: formData.strength || 0.7,
           seed: formData.seed || null,
           webhook: null,
-          track_id: null
+          track_id: null,
+          num_inference_steps: 21,
+          guidance_scale: 7
         });
 
         const requestOptions = {
@@ -262,7 +264,7 @@ export default function Home() {
           };
 
           pollForImage();
-        } else if (data.data.status === "seccess") {
+        } else if (data.data.status === "success") {
           setImageUrl(data.data.output[0]);
           console.log(data.data.output[0]);
         } else {
