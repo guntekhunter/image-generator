@@ -49,6 +49,13 @@ export default function Home() {
     style: "",
     type: ""
   });
+
+  const [productCount, setProductCount] = useState({
+    vinyl: 0,
+    wallpanel: 0,
+    plafon: 0,
+    uv_board: 0
+  })
   const [image, setImage] = useState(null);
   const [isActive, setIsActive] = useState("")
   const [imageUrl, setImageUrl] = useState("");
@@ -65,6 +72,7 @@ export default function Home() {
   const [modalBudgetIsOpen, setModalBudgetIsOpen] = useState(false)
   const [openedModal, setOpenedModal] = useState("")
   const [combineImageUrl, setCombineImageUrl] = useState("")
+  const [enought, setEnought] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -323,22 +331,9 @@ export default function Home() {
       });
     } else {
       setOpenedModal(e)
-      if (requiredData.products.includes("vinyl") || e === "vinyl") {
-        const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
-        const dus = vinylCount / 36;
-        const final = Math.ceil(dus) * 300000;
-        const budgetString = requiredData.budget
-        const cleanedBudgetString = budgetString.replace(/\./g, '');
-        const budget = parseInt(cleanedBudgetString, 10);
-        console.log("ini Budget", budget)
-        const finalCount = (budget - final);
-        const formattedFinalCount = finalCount.toLocaleString('id-ID');
-        setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
-        // setModalBudgetIsOpen(true)
-        // setTimeout(() => setModalBudgetIsOpen(false), 3000);
-      } else {
-        console.log("error count floor");
-      }
+
+      console.log("ini produknya dari required", requiredData.products)
+      console.log("ini produknya dari e",)
       openModal()
       setIsActive((prevActive) => (prevActive === e ? null : e));
     }
@@ -374,6 +369,55 @@ export default function Home() {
         };
       }
     });
+    if (productName === "vinyl") {
+      const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+      const dus = vinylCount / 36;
+      const final = Math.ceil(dus) * 300000;
+      setProductCount(prevState => ({ ...prevState, vinyl: vinylCount }))
+      const budgetString = requiredData.budget
+      const cleanedBudgetString = budgetString.replace(/\./g, '');
+      const budget = parseInt(cleanedBudgetString, 10);
+      const finalCount = (budget - final);
+      const formattedFinalCount = finalCount.toLocaleString('id-ID');
+
+      // if(formattedFinalCount > budget){
+      // }
+      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+    } else if (productName === "wallpanel") {
+      const wallpanelCount = Math.round((requiredData.width * requiredData.hight) * 100 / 19 / 2.95);
+      const final = wallpanelCount * 300000;
+      const budgetString = requiredData.budget
+      const cleanedBudgetString = budgetString.replace(/\./g, '');
+      const budget = parseInt(cleanedBudgetString, 10);
+      const jumlahLembar = budget / 300000
+      const finalCountWallpanel = Math.ceil(jumlahLembar)
+      setProductCount(prevState => ({ ...prevState, wallpanel: finalCountWallpanel }))
+      const finalCount = (budget - final);
+      const formattedFinalCount = finalCount.toLocaleString('id-ID');
+      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+    } else if (productName === "plafon") {
+      const plafonCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+      const final = Math.ceil(plafonCount) * 300000;
+      const budgetString = requiredData.budget
+      const cleanedBudgetString = budgetString.replace(/\./g, '');
+      const budget = parseInt(cleanedBudgetString, 10);
+      const finalCount = (budget - final);
+      const formattedFinalCount = finalCount.toLocaleString('id-ID');
+      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+
+    } else if (productName === "uv board") {
+      const plafonCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+      const dus = plafonCount / 36;
+      const final = Math.ceil(dus) * 300000;
+      const budgetString = requiredData.budget
+      const cleanedBudgetString = budgetString.replace(/\./g, '');
+      const budget = parseInt(cleanedBudgetString, 10);
+      console.log("ini Budget", budget)
+      const finalCount = (budget - final);
+      const formattedFinalCount = finalCount.toLocaleString('id-ID');
+      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+    }
+    setModalBudgetIsOpen(true)
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 
@@ -387,6 +431,8 @@ export default function Home() {
       console.log("error compile image")
     }
   }, [imageUrlUploaded]);
+
+  console.log(productCount)
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
@@ -550,6 +596,30 @@ export default function Home() {
         <section className="w-full justify-around flex">
           <div className="w-[80%]">
             <h2 className="text-[1.5rem] font-semibold py-[1.8rem] text-center">Deskripsi</h2>
+            <table className="min-w-full bg-white rounded-md">
+              <thead className="bg-gray-200 rounded-md">
+                <tr>
+                  <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 tracking-wider">Nama Produk</th>
+                  <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 tracking-wider">Jumlah Produk</th>
+                  <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 tracking-wider">Harga</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* {products.map((product, index) => ( */}
+                <tr >
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                    <div className="text-sm leading-5 text-gray-800"></div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                    <div className="text-sm leading-5 text-gray-800"></div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                    <div className="text-sm leading-5 text-gray-800"></div>
+                  </td>
+                </tr>
+                {/* ))} */}
+              </tbody>
+            </table>
             <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem] w-full max-w-screen-2xl">
               <Markdown>{summary}</Markdown>
             </article>
