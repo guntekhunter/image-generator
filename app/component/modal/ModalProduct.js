@@ -34,7 +34,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
     }
 
     return (
-        <div className={`w-full h-[100vh] fixed z-10 flex justify-around pt-[1rem] pb-[5rem] overflow-hidden`}>
+        <div className={`w-full h-[100vh] fixed z-10 flex justify-around items-center overflow-hidden bg-black bg-transparent-[.07]`} style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
             <div className="w-[70%] bg-white p-[2rem] rounded-[10px] border border-gray-200 space-y-[1rem] overflow-y-scroll">
                 <h2 className="font-semibold text-[1.5rem]">{opened}</h2>
                 <div className=" w-full">

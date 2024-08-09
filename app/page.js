@@ -73,6 +73,7 @@ export default function Home() {
   const [openedModal, setOpenedModal] = useState("")
   const [combineImageUrl, setCombineImageUrl] = useState("")
   const [enought, setEnought] = useState(true)
+  const [products, setProducts] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -371,30 +372,55 @@ export default function Home() {
     });
     if (productName === "vinyl") {
       const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
-      const dus = vinylCount / 36;
-      const final = Math.ceil(dus) * 300000;
-      setProductCount(prevState => ({ ...prevState, vinyl: vinylCount }))
+      const dus = vinylCount / 24;
+      const final = Math.ceil(dus) * 440000;
+      setProductCount(prevState => ({ ...prevState, vinyl: Math.ceil(dus) }))
       const budgetString = requiredData.budget
       const cleanedBudgetString = budgetString.replace(/\./g, '');
       const budget = parseInt(cleanedBudgetString, 10);
       const finalCount = (budget - final);
       const formattedFinalCount = finalCount.toLocaleString('id-ID');
 
-      // if(formattedFinalCount > budget){
-      // }
-      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+      if (budget > final) {
+        setProducts(prevProducts => [
+          ...prevProducts,
+          { name: "vinyl", quantity: Math.ceil(dus), price: final }
+        ]);
+        setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+      } else {
+        setEnought(false)
+      }
     } else if (productName === "wallpanel") {
       const wallpanelCount = Math.round((requiredData.width * requiredData.hight) * 100 / 19 / 2.95);
-      const final = wallpanelCount * 300000;
+      const final = wallpanelCount * 145000;
       const budgetString = requiredData.budget
       const cleanedBudgetString = budgetString.replace(/\./g, '');
       const budget = parseInt(cleanedBudgetString, 10);
-      const jumlahLembar = budget / 300000
+      const jumlahLembar = budget / 145000
       const finalCountWallpanel = Math.ceil(jumlahLembar)
+      const thePrize = finalCountWallpanel * 145000
       setProductCount(prevState => ({ ...prevState, wallpanel: finalCountWallpanel }))
       const finalCount = (budget - final);
       const formattedFinalCount = finalCount.toLocaleString('id-ID');
-      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+
+      if (budget > finalCount || budget > final) {
+        if (requiredData.products.includes("vinyl")) {
+          setProducts(prevProducts => [
+            ...prevProducts,
+            { name: "wallpanel", quantity: finalCountWallpanel, price: finalCount }
+          ]);
+          setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+        } else {
+          setProducts(prevProducts => [
+            ...prevProducts,
+            { name: "wallpanel", quantity: finalCountWallpanel, price: final }
+          ]);
+          setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+        }
+      } else {
+        setEnought(false)
+      }
+
     } else if (productName === "plafon") {
       const plafonCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
       const final = Math.ceil(plafonCount) * 300000;
@@ -403,19 +429,34 @@ export default function Home() {
       const budget = parseInt(cleanedBudgetString, 10);
       const finalCount = (budget - final);
       const formattedFinalCount = finalCount.toLocaleString('id-ID');
-      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
 
+      if (budget > final) {
+        setProducts(prevProducts => [
+          ...prevProducts,
+          { name: "plafon", quantity: plafonCount, price: final }
+        ]);
+        setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+      } else {
+        setEnought(false)
+      }
     } else if (productName === "uv board") {
-      const plafonCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
-      const dus = plafonCount / 36;
+      const uvCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+      const dus = uvCount / 36;
       const final = Math.ceil(dus) * 300000;
       const budgetString = requiredData.budget
       const cleanedBudgetString = budgetString.replace(/\./g, '');
       const budget = parseInt(cleanedBudgetString, 10);
       console.log("ini Budget", budget)
       const finalCount = (budget - final);
-      const formattedFinalCount = finalCount.toLocaleString('id-ID');
-      setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+      const formattedFinalCount = finalCount.toLocaleString('id-ID'); if (budget > final) {
+        setProducts(prevProducts => [
+          ...prevProducts,
+          { name: "uv board", quantity: uvCount, price: final }
+        ]);
+        setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
+      } else {
+        setEnought(false)
+      }
     }
     setModalBudgetIsOpen(true)
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
@@ -433,10 +474,19 @@ export default function Home() {
   }, [imageUrlUploaded]);
 
   console.log(productCount)
+  console.log(products)
+
+  const formatToRupiah = (amount) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR'
+    }).format(amount);
+  };
+
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
-      <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} />
+      <ModalBudget isOpen={modalBudgetIsOpen} budget={requiredData.budget} enought={enought} />
       <ModalProduct isOpen={isModalOpen} onClose={closeModal} save={saveProductDetail} opened={openedModal} />
       <div className="w-[98%] py-[.8rem] z-1">
         <section>
@@ -605,19 +655,19 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {/* {products.map((product, index) => ( */}
-                <tr >
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                    <div className="text-sm leading-5 text-gray-800"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                    <div className="text-sm leading-5 text-gray-800"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                    <div className="text-sm leading-5 text-gray-800"></div>
-                  </td>
-                </tr>
-                {/* ))} */}
+                {products.map((product, index) => (
+                  <tr >
+                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                      <div className="text-sm leading-5 text-gray-800">{product.name}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                      <div className="text-sm leading-5 text-gray-800">{product.quantity}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                      <div className="text-sm leading-5 text-gray-800">{formatToRupiah(product.price)}</div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
             <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem] w-full max-w-screen-2xl">
