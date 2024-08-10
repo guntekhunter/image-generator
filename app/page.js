@@ -74,6 +74,7 @@ export default function Home() {
   const [combineImageUrl, setCombineImageUrl] = useState("")
   const [enought, setEnought] = useState(true)
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -111,6 +112,7 @@ export default function Home() {
 
   const handleGenerate = async (e) => {
     e.preventDefault();
+    setLoading(true)
 
     setSummary("");
     const productDetails = {
@@ -200,9 +202,12 @@ export default function Home() {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
+        const productsList = requiredData.products.join(", ");
+
         const raw = JSON.stringify({
           key: "QwVAtdPWaATRFuq0YF2JT6DJqDKVjmPtoyZmg7dwD1DmZn01kkEzDzvr9aIb",
-          prompt: prompt,
+          // prompt: prompt,
+          prompt: `Create an interior design base on the image input, and make it into a ${requiredData.style} style room, and the room is work as ${requiredData.type} and add a forniture base on that type, include a ${productsList} into the image ${productsList.includes("uv board") ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space." : ""} ${productsList.includes("wallpanel") ? "add a 3d wallpanel looks like a wood texture wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. and make the color of the wallpanel to [#542401] " : ""}`,
           negative_prompt: formData.negative_prompt || "bad quality",
           init_image: imageUrlUploaded,
           width: "512",
@@ -210,11 +215,11 @@ export default function Home() {
           samples: "1",
           temp: false,
           safety_checker: false,
-          strength: formData.strength || 0.7,
+          strength: 0.6,
           seed: formData.seed || null,
           webhook: null,
           track_id: null,
-          num_inference_steps: 21,
+          num_inference_steps: 41,
           guidance_scale: 7
         });
 
@@ -226,10 +231,11 @@ export default function Home() {
         };
 
         const response = await fetch("/api/image-generator-v2", requestOptions);
+        // const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
+        // const data = await response.json();
         console.log("inimi responsenya", response)
-        console.log("inimi responsenya", response.data)
+        // console.log("inimi responsenya", dataImage.data)
         const data = await response.json();
-        console.log(data)
         if (data.data.status === "processing") {
           const idFetch = data.data.id;
 
@@ -258,30 +264,35 @@ export default function Home() {
                     setImageUrl(dataImage.output[0]);
                     console.log(dataImage.output[0]);
                     clearInterval(polling);
+                    setLoading(false)
                   } else if (dataImage.status === 'processing') {
                     console.log('Processing... Please wait.');
                   }
                 } else {
                   setError('Error fetching image status.');
                   clearInterval(polling);
+                  setLoading(false)
                 }
               }, pollInterval);
             } catch (error) {
               console.log('Polling error', error);
               setError('Error during polling.');
+              setLoading(false)
             }
           };
 
           pollForImage();
         } else if (data.data.status === "success") {
-          setImageUrl(data.data.output[0]);
-          console.log(data.data.output[0]);
+          setImageUrl(data.output[0]);
+          console.log(data.output[0]);
+          setLoading(false)
         } else {
           console.log(data.error);
         }
       } catch (error) {
         console.log('Error', error);
         setError("An error occurred");
+        setLoading(false)
       }
     };
 
@@ -483,6 +494,7 @@ export default function Home() {
     }).format(amount);
   };
 
+  console.log(loading)
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
@@ -513,26 +525,26 @@ export default function Home() {
               <p className="py-[.5rem]">Pilih Ruangan</p>
               <div className="relative w-full overflow-hidden">
                 <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
-                  <button onClick={(e) => handleType("kamar tidur")} className="rounded-[10px] bg-[url('/kamar-tidur.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "kamar tidur" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                  <button onClick={(e) => handleType("bedroom")} className="rounded-[10px] bg-[url('/kamar-tidur.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "bedroom" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Kamar Tidur
                     </p>
                   </button>
-                  <button onClick={(e) => handleType("ruang keluarga")} className="rounded-[10px] bg-[url('/ruang-keluarga.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "ruang keluarga" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                  <button onClick={(e) => handleType("family room")} className="rounded-[10px] bg-[url('/ruang-keluarga.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "family room" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Ruang Keluarga
                     </p>
                   </button>
-                  <button onClick={(e) => handleType("ruang tamu")} className="rounded-[10px] bg-[url('/ruang-tamu.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "ruang tamu" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                  <button onClick={(e) => handleType("sitting room")} className="rounded-[10px] bg-[url('/ruang-tamu.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "sitting room" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Ruang Tamu
                     </p>
                   </button>
-                  <button onClick={(e) => handleType("kantor")} className="rounded-[10px] bg-[url('/kantor.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
-                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "kantor" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
+                  <button onClick={(e) => handleType("office")} className="rounded-[10px] bg-[url('/kantor.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
+                    <div className={`absolute inset-0 rounded-[10px] ${requiredData.type === "office" ? "bg-gradient-to-t from-black to-transparent" : "bg-gradient-to-t from-black via-transparent to-transparent"}`} />
                     <p className="text-white drop-shadow-md">
                       Kantor
                     </p>
@@ -639,7 +651,13 @@ export default function Home() {
           {imageUrl ? (
             <Image src={imageUrl} width={500} height={500} alt="gambar" className="w-full" />
           ) : (
-            <div className="h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden border border-[#EDEDED]" />
+            <div className="h-[20rem] rounded-[10px] bg-cover bg-center w-[50%] overflow-hidden border border-[#EDEDED] flex justify-center items-center" >
+              {
+                loading && (
+                  <Image src="/loading.png" alt="" width={500} height={500} className="w-[2rem] animate-spin" />
+                )
+              }
+            </div>
           )}
         </section>
 

@@ -78,19 +78,19 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
                                     <p className="text-[1rem]">WP-02</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-2.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED]`} >
                                     <p className="text-[1rem]">WP-03</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-3.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
                                 <button className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] items-first`} >
                                     <p className="text-[1rem]">WP-04</p>
                                     <div className="w-full justify-center flex">
-                                        <Image src="/wallpanel/wallpanel-1.png" alt="" width={500} height={500} className="w-[8rem]" />
+                                        <Image src="/wallpanel/wallpanel-4.png" alt="" width={500} height={500} className="w-[8rem]" />
                                     </div>
                                 </button>
 
