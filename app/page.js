@@ -205,9 +205,14 @@ export default function Home() {
         const productsList = requiredData.products.join(", ");
 
         const raw = JSON.stringify({
-          key: "QwVAtdPWaATRFuq0YF2JT6DJqDKVjmPtoyZmg7dwD1DmZn01kkEzDzvr9aIb",
+          // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
+          key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
           // prompt: prompt,
-          prompt: `Create an interior design base on the image input, and make it into a ${requiredData.style} style room, and the room is work as ${requiredData.type} and add a forniture base on that type, include a ${productsList} into the image ${productsList.includes("uv board") ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space." : ""} ${productsList.includes("wallpanel") ? "add a 3d wallpanel looks like a wood texture wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. and make the color of the wallpanel to [#542401] " : ""}`,
+          prompt: `${requiredData.style} ${requiredData.type} room, add a forniture that will fit into 
+          ${requiredData.type} room, 
+          ${productsList.includes("uv board") ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space." : ""} 
+          ${productsList.includes("wallpanel") ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally` : "white wall"} and for the floor is
+          ${productsList.includes("vinyl") ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance." : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."}`,
           negative_prompt: formData.negative_prompt || "bad quality",
           init_image: imageUrlUploaded,
           width: "512",
@@ -215,10 +220,11 @@ export default function Home() {
           samples: "1",
           temp: false,
           safety_checker: false,
-          strength: 0.6,
+          strength: 0.9,
           seed: formData.seed || null,
           webhook: null,
           track_id: null,
+          enhance_prompt: true,
           num_inference_steps: 41,
           guidance_scale: 7
         });
@@ -236,7 +242,10 @@ export default function Home() {
         console.log("inimi responsenya", response)
         // console.log("inimi responsenya", dataImage.data)
         const data = await response.json();
+        console.log("ini datanya", data)
+        // if (data.status === "processing") {
         if (data.data.status === "processing") {
+          // const idFetch = data.id;
           const idFetch = data.data.id;
 
           // Polling function
@@ -245,7 +254,8 @@ export default function Home() {
               const pollInterval = 5000; // Poll every 5 seconds
               const polling = setInterval(async () => {
                 const rawFetch = JSON.stringify({
-                  key: "QwVAtdPWaATRFuq0YF2JT6DJqDKVjmPtoyZmg7dwD1DmZn01kkEzDzvr9aIb",
+                  // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
+                  key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
                 });
 
                 const requestOptionsFetch = {
@@ -282,9 +292,10 @@ export default function Home() {
           };
 
           pollForImage();
+          // } else if (data.status === "success") {
         } else if (data.data.status === "success") {
-          setImageUrl(data.output[0]);
-          console.log(data.output[0]);
+          // setImageUrl(data.output[0]);
+          setImageUrl(data.data.output[0]);
           setLoading(false)
         } else {
           console.log(data.error);
@@ -402,7 +413,7 @@ export default function Home() {
         setEnought(false)
       }
     } else if (productName === "wallpanel") {
-      const wallpanelCount = Math.round((requiredData.width * requiredData.hight) * 100 / 19 / 2.95);
+      const wallpanelCount = Math.round((requiredData.width * requiredData.hight) * 100 / 16 / 2.95);
       const final = wallpanelCount * 145000;
       const budgetString = requiredData.budget
       const cleanedBudgetString = budgetString.replace(/\./g, '');
@@ -424,7 +435,7 @@ export default function Home() {
         } else {
           setProducts(prevProducts => [
             ...prevProducts,
-            { name: "wallpanel", quantity: finalCountWallpanel, price: final }
+            { name: "wallpanel", quantity: wallpanelCount, price: final }
           ]);
           setRequiredData(prevState => ({ ...prevState, budget: formattedFinalCount }));
         }
