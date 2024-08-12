@@ -17,24 +17,49 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
             ...prev,
             jumlah_wallpanel: parseInt(e.target.value) // Replace "yourItemHere" with the actual item you want to add
         }));
+
     };
+
+    const detailProduct = (e) => {
+        if (opened === "wallpanel") {
+            setProductDetail((prev) => ({
+                ...prev,
+                wallpanelWidth: e.target.value // Replace "yourItemHere" with the actual item you want to add
+            }));
+        } else if (opened === "plafon") {
+            setProductDetail((prev) => ({
+                ...prev,
+                plafonWidth: e.target.value // Replace "yourItemHere" with the actual item you want to add
+            }));
+        } else if (opened === "vinyl") {
+            setProductDetail((prev) => ({
+                ...prev,
+                vinylWidth: e.target.value // Replace "yourItemHere" with the actual item you want to add
+            }));
+        } else {
+            setProductDetail((prev) => ({
+                ...prev,
+                uv: e.target.value // Replace "yourItemHere" with the actual item you want to add
+            }));
+        }
+    }
     const handleChangeType = (e) => {
         setType(e.target.value)
     };
 
     const optionsPlafon = [
-        { value: "4mm", label: '4mm' },
-        { value: "6mm", label: '6mm' },
+        { value: 4, label: '4mm' },
+        { value: 6, label: '6mm' },
 
     ];
     const optionsVinyl = [
-        { value: "2mm", label: '2mm' },
-        { value: "3mm", label: '3mm' },
+        { value: 24, label: '2mm' },
+        { value: 36, label: '3mm' },
 
     ];
     const optionsWallpanel = [
-        { value: "16cm", label: '16cm' },
-        { value: "19cm", label: '19cm' }
+        { value: 16, label: '16cm' },
+        { value: 19, label: '19cm' }
     ];
     const options = [
         { value: 1, label: '1 Sisi' },
@@ -77,6 +102,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
     }
 
     console.log(opened)
+    console.log(productDetail)
     return (
         <div className={`w-full h-[100vh] fixed z-10 flex justify-around items-center overflow-hidden bg-black bg-transparent-[.07]`} style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
             <div className="w-[70%] bg-white p-[2rem] rounded-[10px] border border-gray-200 space-y-[1rem] overflow-y-scroll">
@@ -223,7 +249,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                                 </DropDown>
                             </div>
                             <DropDown
-                                onChange={handleChange}
+                                onChange={detailProduct}
                                 value={count}
                                 name="dropdown"
                                 className="custom-dropdown"
@@ -239,7 +265,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                         <>
                             <div className="grid grid-cols-2 gap-[.8rem]">
                                 <DropDown
-                                    onChange={handleChange}
+                                    onChange={detailProduct}
                                     value={count}
                                     name="dropdown"
                                     className="custom-dropdown"
@@ -254,7 +280,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                         <>
                             <div className="grid grid-cols-2 gap-[.8rem]">
                                 <DropDown
-                                    onChange={handleChange}
+                                    onChange={detailProduct}
                                     value={count}
                                     name="dropdown"
                                     className="custom-dropdown"

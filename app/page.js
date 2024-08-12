@@ -393,10 +393,10 @@ export default function Home() {
       }
     });
 
-    console.log("ini Detailnya", productDetail)
+    console.log("ini Detailnya", productDetail.vinylWidth)
     if (productName === "vinyl") {
       const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
-      const dus = vinylCount / 24;
+      const dus = vinylCount / productDetail.vinylWidth;
       const final = Math.ceil(dus) * 440000;
       setProductCount(prevState => ({ ...prevState, vinyl: Math.ceil(dus) }))
       const budgetString = requiredData.budget
@@ -415,7 +415,7 @@ export default function Home() {
         setEnought(false)
       }
     } else if (productName === "wallpanel") {
-      const wallpanelCount = Math.round((requiredData.width * requiredData.hight) * 100 / 16 / 2.95);
+      const wallpanelCount = Math.round((requiredData.width * requiredData.hight) * 100 / productDetail.wallpanelWidth / 2.95);
       const final = wallpanelCount * 145000;
       const budgetString = requiredData.budget
       const cleanedBudgetString = budgetString.replace(/\./g, '');
@@ -446,7 +446,7 @@ export default function Home() {
       }
 
     } else if (productName === "plafon") {
-      const plafonCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
+      const plafonCount = Math.round((requiredData.width * requiredData.length) * 100 / 20 / productDetail.plafonWidth);
       const final = Math.ceil(plafonCount) * 300000;
       const budgetString = requiredData.budget
       const cleanedBudgetString = budgetString.replace(/\./g, '');
