@@ -377,7 +377,7 @@ export default function Home() {
     setTimeout(() => setModalBudgetIsOpen(false), 3000);
   }
 
-  const saveProductDetail = (status, productName) => {
+  const saveProductDetail = (status, productName, productDetail) => {
     setModalBudgetIsOpen(status)
     setRequiredData((prevData) => {
       if (prevData.products.includes(productName)) {
@@ -392,6 +392,8 @@ export default function Home() {
         };
       }
     });
+
+    console.log("ini Detailnya", productDetail)
     if (productName === "vinyl") {
       const vinylCount = Math.round((requiredData.width * requiredData.length) * 100 / 15 / 0.91);
       const dus = vinylCount / 24;
