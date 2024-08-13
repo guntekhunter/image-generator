@@ -9,6 +9,7 @@ import mergeImages from 'merge-images';
 export default function ModalProduct({ isOpen, onClose, save, opened }) {
     const [count, setCount] = useState("")
     const [type, setType] = useState("")
+    const [width, setWidth] = useState("")
     const [productDetail, setProductDetail] = useState([])
     if (!isOpen) return null;
     const handleChange = (e) => {
@@ -21,6 +22,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
     };
 
     const detailProduct = (e) => {
+        setWidth(e.target.value)
         if (opened === "wallpanel") {
             setProductDetail((prev) => ({
                 ...prev,
@@ -250,7 +252,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                             </div>
                             <DropDown
                                 onChange={detailProduct}
-                                value={count}
+                                value={width}
                                 name="dropdown"
                                 className="custom-dropdown"
                                 options={optionsWallpanel}
@@ -266,7 +268,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                             <div className="grid grid-cols-2 gap-[.8rem]">
                                 <DropDown
                                     onChange={detailProduct}
-                                    value={count}
+                                    value={width}
                                     name="dropdown"
                                     className="custom-dropdown"
                                     options={optionsVinyl}
@@ -281,7 +283,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                             <div className="grid grid-cols-2 gap-[.8rem]">
                                 <DropDown
                                     onChange={detailProduct}
-                                    value={count}
+                                    value={width}
                                     name="dropdown"
                                     className="custom-dropdown"
                                     options={optionsPlafon}

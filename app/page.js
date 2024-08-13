@@ -56,6 +56,8 @@ export default function Home() {
     plafon: 0,
     uv_board: 0
   })
+
+  const [required, setRequired] = useState([])
   const [image, setImage] = useState(null);
   const [isActive, setIsActive] = useState("")
   const [imageUrl, setImageUrl] = useState("");
@@ -111,87 +113,99 @@ export default function Home() {
   };
 
   const handleGenerate = async (e) => {
-    e.preventDefault();
-    setLoading(true)
+    if (requiredData.budget || requiredData.width || requiredData.length || requiredData.hight || requiredData.products || requiredData.style || requiredData.type) {
+      const missingFields = []
+      if (!requiredData.budget) missingFields.push('budget');
+      if (!requiredData.width) missingFields.push('width');
+      if (!requiredData.length) missingFields.push('length');
+      if (!requiredData.hight) missingFields.push('hight'); // assuming "hight" is a typo and you meant "height"
+      if (!requiredData.products || requiredData.products.length === 0) missingFields.push('products');
+      if (!requiredData.style) missingFields.push('style');
+      if (!requiredData.type) missingFields.push('type');
+      setRequired(missingFields)
+    } else {
+      e.preventDefault();
+      setLoading(true)
 
-    setSummary("");
-    const productDetails = {
-      wallpanel: {
-        harga: 40000, // in RP
-        panjang: "2.90 m",
-        lebar: "16 cm",
-      },
-      vinyl: {
-        harga: 300000, // in RP
-        panjang: "91 cm",
-        lebar: "12.2 cm",
-        dus: "36 lembar dalam satu dus",
-      },
-      plafonPVC: {
-        harga: 17000, // in RP
-        panjang: "6 meter dan 4 meter",
-        lebar: "20 cm",
-      },
-    };
-
-    const calculateAffordableUnits = (budget, price) => {
-      return Math.floor(budget / price);
-    };
-    setBudgetAnalysist("");
-
-    try {
-      const availableProducts = requiredData.products
-        .map((product) => {
-          const details = productDetails[product];
-          if (details) {
-            const affordableUnits = calculateAffordableUnits(
-              requiredData.budget,
-              details.harga
-            );
-            setAfordable(affordableUnits);
-            return `
-            ${product}:
-            harga = RP. ${details.harga}
-            panjang = ${details.panjang}
-            lebar = ${details.lebar}
-            ${details.dus ? `dus = ${details.dus}` : ""}
-            Anda dapat membeli ${affordableUnits} unit dengan budget ${requiredData.budget
-              }
-          `;
-          }
-          return "";
-        })
-        .join("\n");
-
-      const inputText = `buat analisa kebutuhan [${requiredData.products.join(
-        ", "
-      )}], untuk budget ${requiredData.budget
-        } ini informasi tentang kebutuhan pengguna:
-      panjang ruangan = ${requiredData.length}
-      lebar ruangan = ${requiredData.width}
-      tinggi ruangan = ${requiredData.hight}
-      hanya ini produk yang dapat didapat: 
-      ${availableProducts}
-  
-      berikan kesimpulan dibagian terakhir perhitungan dalam bentuk tabel, berisi nama produk, jumlah lembar, jumlah dus dan harga, pada bagian bawah berikan bagian total, untuk informasi tambahan plafon PVC itu dibeli perlembar, lantai vinyl dibeli perdus, dan wallpanel dibeli perlembar berikan respon dalam bentuk markup language 
-      `;
-
-      const handleError = (error) => {
-        console.error("Error:", error);
+      setSummary("");
+      const productDetails = {
+        wallpanel: {
+          harga: 40000, // in RP
+          panjang: "2.90 m",
+          lebar: "16 cm",
+        },
+        vinyl: {
+          harga: 300000, // in RP
+          panjang: "91 cm",
+          lebar: "12.2 cm",
+          dus: "36 lembar dalam satu dus",
+        },
+        plafonPVC: {
+          harga: 17000, // in RP
+          panjang: "6 meter dan 4 meter",
+          lebar: "20 cm",
+        },
       };
 
-      const handleChunk = (chunk) => {
-        setSummary((prev) => prev + chunk);
+      const calculateAffordableUnits = (budget, price) => {
+        return Math.floor(budget / price);
       };
-      fetchData(inputText, handleChunk, handleError)
-        .then((response) => {
-          setBudgetAnalysist(`response the style of the room is ${requiredData.style}, the room type is a ${requiredData.type} so only add ${requiredData.products} to the image final design`);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    } catch (error) {
-      console.log(error);
+      setBudgetAnalysist("");
+
+      try {
+        const availableProducts = requiredData.products
+          .map((product) => {
+            const details = productDetails[product];
+            if (details) {
+              const affordableUnits = calculateAffordableUnits(
+                requiredData.budget,
+                details.harga
+              );
+              setAfordable(affordableUnits);
+              return `
+              ${product}:
+              harga = RP. ${details.harga}
+              panjang = ${details.panjang}
+              lebar = ${details.lebar}
+              ${details.dus ? `dus = ${details.dus}` : ""}
+              Anda dapat membeli ${affordableUnits} unit dengan budget ${requiredData.budget
+                }
+            `;
+            }
+            return "";
+          })
+          .join("\n");
+
+        const inputText = `buat analisa kebutuhan [${requiredData.products.join(
+          ", "
+        )}], untuk budget ${requiredData.budget
+          } ini informasi tentang kebutuhan pengguna:
+        panjang ruangan = ${requiredData.length}
+        lebar ruangan = ${requiredData.width}
+        tinggi ruangan = ${requiredData.hight}
+        hanya ini produk yang dapat didapat: 
+        ${availableProducts}
+    
+        berikan kesimpulan dibagian terakhir perhitungan dalam bentuk tabel, berisi nama produk, jumlah lembar, jumlah dus dan harga, pada bagian bawah berikan bagian total, untuk informasi tambahan plafon PVC itu dibeli perlembar, lantai vinyl dibeli perdus, dan wallpanel dibeli perlembar berikan respon dalam bentuk markup language 
+        `;
+
+        const handleError = (error) => {
+          console.error("Error:", error);
+        };
+
+        const handleChunk = (chunk) => {
+          setSummary((prev) => prev + chunk);
+        };
+        fetchData(inputText, handleChunk, handleError)
+          .then((response) => {
+            setBudgetAnalysist(`response the style of the room is ${requiredData.style}, the room type is a ${requiredData.type} so only add ${requiredData.products} to the image final design`);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -208,7 +222,7 @@ export default function Home() {
           // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
           key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
           // prompt: prompt,
-          prompt: `${requiredData.style} ${requiredData.type} room, add a forniture that will fit into 
+          prompt: `ultra realistic ${requiredData.style} ${requiredData.type} room, add a forniture that will fit into 
           ${requiredData.type} room, 
           ${productsList.includes("uv board") ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space." : ""} 
           ${productsList.includes("wallpanel") ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally` : "white wall"} and for the floor is
@@ -226,7 +240,12 @@ export default function Home() {
           track_id: null,
           enhance_prompt: true,
           num_inference_steps: 41,
-          guidance_scale: 7
+          guidance_scale: 7,
+          model_id: "interiordesignsuperm"
+          // model_id: "xsachi-interiordesgi"
+          // model_id: "dvarch"
+          // model_id:"midjourney-v4"
+          // model_id: "dream-shaper-8797"
         });
 
         const requestOptions = {
@@ -520,10 +539,10 @@ export default function Home() {
               <h1 className="text-[3rem] font-semibold leading-[3.8rem]">Desain Rumah Lebih Mudah Dengan AI</h1>
               <div className="w-[80%] space-y-[1rem]">
                 <p className="leading-[1.8rem]">Pevesindo Menyediakan jasa desain interior dalam hitungan menit  Menggunakan Teknology AI, Desain Rumah Lebih Cepat dan Mudah</p>
-                <div className="bg-white h-[3rem] flex justify-around px-[1.5rem] rounded-[10px]">
+                <div className={`h-[3rem] flex justify-around px-[1.5rem] rounded-[10px] ${required.includes("budget") ? "border-[1px] border-red-400 bg-red-200" : "border-[#EDEDED] bg-white"}`}>
                   <input name="budget"
                     value={requiredData?.budget !== 0 ? requiredData.budget : " "}
-                    onChange={handleInputRequirenment} className="w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda" />
+                    onChange={handleInputRequirenment} className={`w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda ${required.includes("budget") ? "bg-red-200" : "bg-white"}`} />
                 </div>
                 <Button className="w-[10rem]" onClick={openModalBudget}>Mulai</Button>
               </div>
@@ -535,7 +554,7 @@ export default function Home() {
           <div className="flex space-x-[1rem]">
             <div className="w-full">
               <Input value={requiredData.budget}>Budget</Input>
-              <p className="py-[.5rem]">Pilih Ruangan</p>
+              <p className={`py-[.5rem] ${required.includes("type") ? "text-red-400" : ""}`}>Pilih Ruangan</p>
               <div className="relative w-full overflow-hidden">
                 <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
                   <button onClick={(e) => handleType("bedroom")} className="rounded-[10px] bg-[url('/kamar-tidur.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
@@ -564,7 +583,7 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-              <p className="py-[.5rem]">Pilih Style</p>
+              <p className={`py-[.5rem] ${required.includes("style") ? "text-red-400" : ""}`}>Pilih Style</p>
               <div className="relative w-full overflow-hidden">
                 <div className="w-full h-full grid grid-flow-col transition-transform duration-300 h-[10rem] auto-cols-[13rem] gap-[1rem]" id="slider">
                   <button onClick={(e) => handleStyle("Modern")} className="rounded-[10px] bg-[url('/modern.png')] bg-cover bg-center h-[10rem] p-[1rem] flex items-end relative" >
@@ -587,38 +606,38 @@ export default function Home() {
               </div>
             </div>
             <div className="w-full space-y-[.5rem]">
-              <Input name="width"
+              <Input status={`${required.includes("width") ? "error" : ""}`} name="width"
                 value={requiredData?.width !== 0 ? requiredData.width : " "}
                 onChange={handleInputRequirenment}>Lebar Ruangan (m)</Input>
-              <Input name="length"
+              <Input status={`${required.includes("length") ? "error" : ""}`} name="length"
                 value={requiredData?.length !== 0 ? requiredData.length : " "}
                 onChange={handleInputRequirenment}>Panjang Ruangan (m)</Input>
-              <Input name="hight"
+              <Input status={`${required.includes("hight") ? "error" : ""}`} name="hight"
                 value={requiredData?.hight !== 0 ? requiredData.hight : " "}
                 onChange={handleInputRequirenment}>Tinggi Ruangan (m)</Input>
               <div className="flex ">
-                <div className="w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem]">
+                <div className={`w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem] ${required.includes("hight") ? "border-red-400" : ""}`}>
                   <CldUploadWidget uploadPreset="pevesindo" onSuccess={(results) => {
                     setImageUrlUploaded(results?.info.url)
                   }}>
                     {({ open }) => {
                       return (
-                        <button className="button" onClick={() => open()}>
+                        <button className={`button ${required.includes("hight") ? "text-red-400" : ""}`} onClick={() => open()}>
                           Upload
                         </button>
                       );
                     }}
                   </CldUploadWidget>
-                  <div className="text-black font-medium p-2 rounded flex justify-center content-center">
-                    Masukkan Foto Ruangan
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
         <section>
-          <h2 className="text-[1.5rem] font-semibold py-[1.8rem]">Produk</h2>
+          <div className="py-[1.8rem]">
+            <h2 className={`text-[1.5rem] font-semibold ${required.includes("products") ? "text-red-400" : ""}`}>Produk</h2>
+            <p className={`${required.includes("products") ? "text-red-400 block" : "hidden"}`}>Silahkan Pilih Produk</p>
+          </div>
           <div className="relative w-full overflow-auto touch-pan-y">
             <div className="w-full h-full grid grid-flow-col gap-[1rem] auto-cols-[25rem] transition-transform duration-300" id="slider">
               <button onClick={() => handleProducts("wallpanel")} className={`w-[25rem] h-[15rem] rounded-[10px] bg-[url('/wallpanel.png')] bg-cover bg-center p-[2rem] font-semibold text-[1.5rem] flex items-end relative`} >
