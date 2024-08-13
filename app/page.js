@@ -38,7 +38,8 @@ export default function Home() {
     control: "depth",
     steps: 40,
     cfg: 7.5,
-    negative_prompt: "painting, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime, furniture, decor, objects, people, animals, text, logos, drawings, reflections, shadows, distortions, not realistict",
+    // negative_prompt: "painting, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime, furniture, decor, objects, people, animals, text, logos, drawings, reflections, shadows, distortions, not realistict ",
+    negative_prompt: "wallpanel, tv, human, wood, decoration, bed, chair, forniture, picture, painting, standing man, black square, black rectangle, stuff uther the wall dan floor, blue, rectangle, debris, cotton, white flakes, black line at the wall,",
   });
   const [requiredData, setRequiredData] = useState({
     budget: 0,
@@ -113,7 +114,7 @@ export default function Home() {
   };
 
   const handleGenerate = async (e) => {
-    if (requiredData.budget || requiredData.width || requiredData.length || requiredData.hight || requiredData.products || requiredData.style || requiredData.type) {
+    if (!requiredData.budget || !requiredData.width || !requiredData.length || !requiredData.hight || !requiredData.products || !requiredData.style || !requiredData.type || !imageUrlUploaded) {
       const missingFields = []
       if (!requiredData.budget) missingFields.push('budget');
       if (!requiredData.width) missingFields.push('width');
@@ -122,6 +123,7 @@ export default function Home() {
       if (!requiredData.products || requiredData.products.length === 0) missingFields.push('products');
       if (!requiredData.style) missingFields.push('style');
       if (!requiredData.type) missingFields.push('type');
+      if (!imageUrlUploaded) missingFields.push('image');
       setRequired(missingFields)
     } else {
       e.preventDefault();
@@ -219,29 +221,36 @@ export default function Home() {
         const productsList = requiredData.products.join(", ");
 
         const raw = JSON.stringify({
+          // pevesindo api key
           // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-          key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
+          // my api key
+          // key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
+          key: "Ree6pQ5WjswCEc0xBtlygTVlBfKqBoaLKD7YKAfikq4pzPXE8dv47A5sDdaz",
           // prompt: prompt,
-          prompt: `ultra realistic ${requiredData.style} ${requiredData.type} room, add a forniture that will fit into 
-          ${requiredData.type} room, 
-          ${productsList.includes("uv board") ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space." : ""} 
-          ${productsList.includes("wallpanel") ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally` : "white wall"} and for the floor is
-          ${productsList.includes("vinyl") ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance." : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."}`,
+          prompt: `Transform the room into a completely empty space, removing all furniture, decorations, and objects. Keep only the walls, floor, and ceiling intact, ensuring that the room appears clean and devoid of any items. make a compelitly white clean wall and clean floor`,
+          // prompt: `ultra realistic ${requiredData.style} ${requiredData.type} room, add a forniture that will fit into 
+          // ${requiredData.type} room, 
+          // ${productsList.includes("uv board") ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space." : ""} 
+          // ${productsList.includes("wallpanel") ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally` : "white wall"} and for the floor is
+          // ${productsList.includes("vinyl") ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance." : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."}`,
           negative_prompt: formData.negative_prompt || "bad quality",
           init_image: imageUrlUploaded,
           width: "512",
           height: "512",
           samples: "1",
           temp: false,
-          safety_checker: false,
-          strength: 0.9,
+          // safety_checker: false,
+          safety_checker: true,
+          strength: 1,
+          // strength: 0.9,
           seed: formData.seed || null,
           webhook: null,
           track_id: null,
           enhance_prompt: true,
           num_inference_steps: 41,
-          guidance_scale: 7,
-          model_id: "interiordesignsuperm"
+          // guidance_scale: 7,
+          guidance_scale: 9,
+          // model_id: "interiordesignsuperm"
           // model_id: "xsachi-interiordesgi"
           // model_id: "dvarch"
           // model_id:"midjourney-v4"
@@ -273,8 +282,11 @@ export default function Home() {
               const pollInterval = 5000; // Poll every 5 seconds
               const polling = setInterval(async () => {
                 const rawFetch = JSON.stringify({
+                  // pevesindo ap key
                   // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-                  key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
+                  //my api key
+                  // key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
+                  key: "Ree6pQ5WjswCEc0xBtlygTVlBfKqBoaLKD7YKAfikq4pzPXE8dv47A5sDdaz",
                 });
 
                 const requestOptionsFetch = {
@@ -526,7 +538,7 @@ export default function Home() {
     }).format(amount);
   };
 
-  console.log(loading)
+  console.log("inimi ininya",required)
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
@@ -539,7 +551,7 @@ export default function Home() {
               <h1 className="text-[3rem] font-semibold leading-[3.8rem]">Desain Rumah Lebih Mudah Dengan AI</h1>
               <div className="w-[80%] space-y-[1rem]">
                 <p className="leading-[1.8rem]">Pevesindo Menyediakan jasa desain interior dalam hitungan menit  Menggunakan Teknology AI, Desain Rumah Lebih Cepat dan Mudah</p>
-                <div className={`h-[3rem] flex justify-around px-[1.5rem] rounded-[10px] ${required.includes("budget") ? "border-[1px] border-red-400 bg-red-200" : "border-[#EDEDED] bg-white"}`}>
+                <div className={`h-[3rem] flex justify-around px-[1.5rem] rounded-[10px] text-black ${required.includes("budget") ? "border-[1px] border-red-400 bg-red-200" : "border-[#EDEDED] bg-white"}`}>
                   <input name="budget"
                     value={requiredData?.budget !== 0 ? requiredData.budget : " "}
                     onChange={handleInputRequirenment} className={`w-full h-full focus:outline-none focus:ring-0 text-black" placeholder="Masukkan Budget Anda ${required.includes("budget") ? "bg-red-200" : "bg-white"}`} />
@@ -616,18 +628,28 @@ export default function Home() {
                 value={requiredData?.hight !== 0 ? requiredData.hight : " "}
                 onChange={handleInputRequirenment}>Tinggi Ruangan (m)</Input>
               <div className="flex ">
-                <div className={`w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem] ${required.includes("hight") ? "border-red-400" : ""}`}>
-                  <CldUploadWidget uploadPreset="pevesindo" onSuccess={(results) => {
-                    setImageUrlUploaded(results?.info.url)
-                  }}>
-                    {({ open }) => {
-                      return (
-                        <button className={`button ${required.includes("hight") ? "text-red-400" : ""}`} onClick={() => open()}>
-                          Upload
-                        </button>
-                      );
-                    }}
-                  </CldUploadWidget>
+                <div className={`w-full h-[11.3rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative mt-[1rem] ${required.includes("image") ? "border-red-400" : ""}`}>
+                <CldUploadWidget
+  uploadPreset="pevesindo"
+  onSuccess={(results) => setImageUrlUploaded(results?.info.url)}
+>
+  {({ open }) => {
+    return (
+      <button
+        className={`button ${required.includes("image") ? "text-red-400" : ""}`}
+        onClick={() => {
+          if (open) {
+            open();
+          } else {
+            console.error("Open function is not available");
+          }
+        }}
+      >
+        Upload
+      </button>
+    );
+  }}
+</CldUploadWidget>
                 </div>
               </div>
             </div>
