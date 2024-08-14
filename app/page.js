@@ -113,7 +113,7 @@ export default function Home() {
   };
 
   const handleGenerate = async (e) => {
-    if (requiredData.budget || requiredData.width || requiredData.length || requiredData.hight || requiredData.products || requiredData.style || requiredData.type) {
+    if (!requiredData.budget || !requiredData.width || !requiredData.length || !requiredData.hight || !requiredData.products || !requiredData.style || !requiredData.type || !imageUrlUploaded) {
       const missingFields = []
       if (!requiredData.budget) missingFields.push('budget');
       if (!requiredData.width) missingFields.push('width');
@@ -122,6 +122,7 @@ export default function Home() {
       if (!requiredData.products || requiredData.products.length === 0) missingFields.push('products');
       if (!requiredData.style) missingFields.push('style');
       if (!requiredData.type) missingFields.push('type');
+      if (!imageUrlUploaded) missingFields.push('image');
       setRequired(missingFields)
     } else {
       e.preventDefault();
