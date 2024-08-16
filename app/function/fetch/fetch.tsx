@@ -8,3 +8,11 @@ export const createProduct = async (data: any) => {
     console.log(error);
   }
 };
+export const getProduct = async () => {
+  try {
+    const res = await axios.get("api/create-product");
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

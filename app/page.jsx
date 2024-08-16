@@ -34,12 +34,14 @@ export default function Home() {
     style_id: 22,
     seed: "42",
     aspect_ratio: "1:1",
-    strength: 40,
+    strength: 1,
     control: "depth",
-    steps: 40,
+    num_inference_steps: 41,
     cfg: 7.5,
+    // negative_prompt:
+    //   "painting, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime, furniture, decor, objects, people, animals, text, logos, drawings, reflections, shadows, distortions, not realistict",
     negative_prompt:
-      "painting, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime, furniture, decor, objects, people, animals, text, logos, drawings, reflections, shadows, distortions, not realistict",
+      "Furniture, chairs, tables, sofas, household items, artifacts, objects, clutter, imperfections, inconsistencies, distortions, furniture shadows, marks from removed objects.",
   });
   const [requiredData, setRequiredData] = useState({
     budget: 0,
@@ -235,42 +237,46 @@ export default function Home() {
 
         const raw = JSON.stringify({
           // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-          key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
-          // prompt: prompt,
-          prompt: `ultra realistic ${requiredData.style} ${
-            requiredData.type
-          } room, add a forniture that will fit into 
-          ${requiredData.type} room, 
-          ${
-            productsList.includes("uv board")
-              ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space."
-              : ""
-          } 
-          ${
-            productsList.includes("wallpanel")
-              ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally`
-              : "white wall"
-          } and for the floor is
-          ${
-            productsList.includes("vinyl")
-              ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance."
-              : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."
-          }`,
+          key: "cvG2nz4BTjBnB46sH2bqGN5L9mUxHVC4ey5vbW5138fNhmq9R8BN9sADBQIO",
+          prompt:
+            "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wallpanel red",
+          // prompt: `ultra realistic ${requiredData.style} ${
+          //   requiredData.type
+          // } room, add a forniture that will fit into
+          // ${requiredData.type} room,
+          // ${
+          //   productsList.includes("uv board")
+          //     ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space."
+          //     : ""
+          // }
+          // ${
+          //   productsList.includes("wallpanel")
+          //     ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally`
+          //     : "white wall"
+          // } and for the floor is
+          // ${
+          //   productsList.includes("vinyl")
+          //     ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance."
+          //     : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."
+          // }`,
           negative_prompt: formData.negative_prompt || "bad quality",
           init_image: imageUrlUploaded,
           width: "512",
           height: "512",
           samples: "1",
           temp: false,
+          only_mask: true,
           safety_checker: false,
-          strength: 0.9,
+          strength: 1,
           seed: formData.seed || null,
           webhook: null,
           track_id: null,
           enhance_prompt: true,
           num_inference_steps: 41,
+          alpha_matting_foreground_threshold: 300,
           guidance_scale: 7,
-          model_id: "interiordesignsuperm",
+          model_id: "realistic-vision-v13",
+          // model_id: "interiordesignsuperm",
           // model_id: "xsachi-interiordesgi"
           // model_id: "dvarch"
           // model_id:"midjourney-v4"
