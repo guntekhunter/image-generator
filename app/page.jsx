@@ -237,28 +237,28 @@ export default function Home() {
 
         const raw = JSON.stringify({
           // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-          key: "cvG2nz4BTjBnB46sH2bqGN5L9mUxHVC4ey5vbW5138fNhmq9R8BN9sADBQIO",
-          prompt:
-            "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wallpanel red",
-          // prompt: `ultra realistic ${requiredData.style} ${
-          //   requiredData.type
-          // } room, add a forniture that will fit into
-          // ${requiredData.type} room,
-          // ${
-          //   productsList.includes("uv board")
-          //     ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space."
-          //     : ""
-          // }
-          // ${
-          //   productsList.includes("wallpanel")
-          //     ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally`
-          //     : "white wall"
-          // } and for the floor is
-          // ${
-          //   productsList.includes("vinyl")
-          //     ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance."
-          //     : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."
-          // }`,
+          key: "eeef3lDIFdW8fBz34korJwc2xlCn7TcBEHy9WeWXHJamojWC0Cfmf94NFozr",
+          // prompt:
+          //   "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wallpanel red",
+          prompt: `ultra realistic ${requiredData.style} ${
+            requiredData.type
+          } room, add a forniture that will fit into
+          ${requiredData.type} room,
+          ${
+            productsList.includes("uv board")
+              ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space."
+              : ""
+          }
+          ${
+            productsList.includes("wallpanel")
+              ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally`
+              : "white wall"
+          } and for the floor is
+          ${
+            productsList.includes("vinyl")
+              ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance."
+              : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."
+          }`,
           negative_prompt: formData.negative_prompt || "bad quality",
           init_image: imageUrlUploaded,
           width: "512",
@@ -267,7 +267,7 @@ export default function Home() {
           temp: false,
           only_mask: true,
           safety_checker: false,
-          strength: 1,
+          strength: 2,
           seed: formData.seed || null,
           webhook: null,
           track_id: null,
@@ -275,8 +275,8 @@ export default function Home() {
           num_inference_steps: 41,
           alpha_matting_foreground_threshold: 300,
           guidance_scale: 7,
-          model_id: "realistic-vision-v13",
-          // model_id: "interiordesignsuperm",
+          // model_id: "realistic-vision-v13",
+          model_id: "interiordesignsuperm",
           // model_id: "xsachi-interiordesgi"
           // model_id: "dvarch"
           // model_id:"midjourney-v4"
@@ -290,17 +290,20 @@ export default function Home() {
           redirect: "follow",
         };
 
-        const response = await fetch("/api/image-generator-v2", requestOptions);
-        // const response = await fetch("https://modelslab.com/api/v6/realtime/img2img", requestOptions);
+        // const response = await fetch("/api/image-generator-v2", requestOptions);
+        const response = await fetch(
+          "https://modelslab.com/api/v6/realtime/img2img",
+          requestOptions
+        );
         // const data = await response.json();
         console.log("inimi responsenya", response);
         // console.log("inimi responsenya", dataImage.data)
         const data = await response.json();
         console.log("ini datanya", data);
-        // if (data.status === "processing") {
-        if (data.data.status === "processing") {
-          // const idFetch = data.id;
-          const idFetch = data.data.id;
+        if (data.status === "processing") {
+          // if (data.data.status === "processing") {
+          const idFetch = data.id;
+          // const idFetch = data.data.id;
 
           // Polling function
           const pollForImage = async () => {
@@ -349,10 +352,10 @@ export default function Home() {
           };
 
           pollForImage();
-          // } else if (data.status === "success") {
-        } else if (data.data.status === "success") {
-          // setImageUrl(data.output[0]);
-          setImageUrl(data.data.output[0]);
+        } else if (data.status === "success") {
+          // } else if (data.data.status === "success") {
+          setImageUrl(data.output[0]);
+          // setImageUrl(data.data.output[0]);
           setLoading(false);
         } else {
           console.log(data.error);
