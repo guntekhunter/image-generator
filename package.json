@@ -11,17 +11,24 @@
   "dependencies": {
     "@langchain/groq": "^0.0.15",
     "@prisma/client": "^5.18.0",
+    "@react-three/drei": "^9.111.1",
+    "@react-three/fiber": "^8.17.5",
     "@tailwindcss/typography": "^0.5.13",
     "axios": "^1.7.4",
+    "framer-motion": "^11.3.28",
     "groq-sdk": "^0.5.0",
     "imaginesdk": "^1.1.0",
+    "maath": "^0.10.8",
     "markdown-to-jsx": "^7.4.7",
     "merge-images": "^2.0.0",
     "migrate": "^2.1.0",
     "next": "14.2.5",
     "next-cloudinary": "^6.9.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-color": "^2.19.3",
+    "react-dom": "^18",
+    "three": "^0.167.1",
+    "valtio": "^1.13.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.11",
