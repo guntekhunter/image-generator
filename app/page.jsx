@@ -41,7 +41,7 @@ export default function Home() {
     // negative_prompt:
     //   "painting, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime, furniture, decor, objects, people, animals, text, logos, drawings, reflections, shadows, distortions, not realistict",
     negative_prompt:
-      "Furniture, chairs, tables, sofas, household items, artifacts, objects, clutter, imperfections, inconsistencies, distortions, furniture shadows, marks from removed objects. object that doesnt colored white, woman, man, person, human, dark spot, root, black wall, black area, black rectangle, renaicance design, pilar. people, humanoid caracter, alien, princess, bad quality, low resolution, duplicated image",
+      "Furniture, chairs, tables, sofas, household items, artifacts, objects, clutter, imperfections, inconsistencies, distortions, furniture shadows, marks from removed objects. object that doesnt colored white, woman, man, person, human, dark spot, root, black wall, black area, black rectangle, renaicance design, pilar. people, humanoid caracter, alien, princess, bad quality, low resolution, duplicated image, unstructure, duplicated doors, (black object, white object), colorful background, nsfw (child:1.5), ((((underage)))), ((((child)))), (((kid))), (((preteen))), (teen:1.5) ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, bad anatomy, watermark, signature, cut off, low contrast, underexposed, overexposed, bad art, beginner, amateur, distorted face, blurry, draft, grainy, transparent wallpanel, transparent wall",
   });
   const [requiredData, setRequiredData] = useState({
     budget: 0,
@@ -128,7 +128,7 @@ export default function Home() {
         // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
         //i dont know
         // key: "eeef3lDIFdW8fBz34korJwc2xlCn7TcBEHy9WeWXHJamojWC0Cfmf94NFozr",
-        key: "ubGgmiBM56PhMst30WIKtBxU4l56Vc9dQnhRfJkXZpGQGWj2Uq6APad5Y0iK",
+        key: "nFYjWffy0omPsKDb8LV6kvSQ46y3azAwUfcaJertHHsatZyG9gYjLe8ua5Lu",
         // prompt:
           // "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wall white",
           // "turn it into an empty room, clear all the fornitur and all things, and left with only wall and the floor, with full wall colored white, all the floor colored white, the wall and the floor should be flat",
@@ -143,14 +143,14 @@ export default function Home() {
         }
         ${
           productsList.includes("wallpanel")
-            ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs vertcaly, and cover only 20% of the wall, the rest of the wall is colored red`
+            ? `at the wall add a vertical panel design featuring narrow, evenly spaced vertical slats in a light wooden texture. Each slat is rectangular and has a consistent height and width, creating a rhythmic pattern across the surface. The slats are positioned closely together, casting subtle shadows in the gaps between them. The background behind the slats is darker, providing contrast and highlighting the light color and fine wood grain texture of the slats. The overall lighting is soft, accentuating the smoothness and natural texture of the wood without harsh reflections`
             : "white wall"
         } and for the floor is
         ${
           productsList.includes("vinyl")
             ? " vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance."
             : " a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."
-        }`,
+        } full body, detailed clothing, highly detailed, cinematic lighting, stunningly beautiful, intricate, sharp focus, f/1. 8, 85mm, (centered image composition), (professionally color graded), ((bright soft diffused light)), volumetric fog, trending on instagram, trending on tumblr, HDR 4K, 8K`,
         negative_prompt: formData.negative_prompt || "bad quality",
         init_image: imageUrlUploaded,
         width: "512",
@@ -158,7 +158,7 @@ export default function Home() {
         samples: "1",
         temp: false,
         safety_checker: false,
-        strength: 0.9,
+        strength: 0.7,
         scheduler: "UniPCMultistepScheduler",
         seed: formData.seed || null,
         webhook: null,
@@ -166,9 +166,13 @@ export default function Home() {
         enhance_prompt: true,
         num_inference_steps: 41,
         alpha_matting_foreground_threshold: 300,
-        guidance_scale: 18,
-        // model_id: "realistic-vision-v13",
-        model_id: "interiordesignsuperm",
+        guidance_scale: 7.5,
+        lora_strength: 0.9,
+        ip_adapter_id: "ip-adapter_sd15",
+        ip_adapter_scale: 0.4,
+        ip_adapter_image: "https://res.cloudinary.com/unm/image/upload/v1724049132/regcoexupcchdfsvtrko.png",
+        model_id: "realistic-vision-v13",
+        // model_id: "interiordesignsuperm",
         // model_id: "xsachi-interiordesgi"
         // model_id: "dvarch",
         // model_id: "midjourney-v4",
@@ -182,21 +186,21 @@ export default function Home() {
         redirect: "follow",
       };
 
-      // const response = await fetch("/api/image-generator-v2", requestOptions);
-      const response = await fetch(
+      const response = await fetch("/api/image-generator-v2", requestOptions);
+      // const response = await fetch(
         // "https://modelslab.com/api/v6/realtime/img2img",
-        "https://modelslab.com/api/v6/images/img2img",
-        requestOptions
-      );
+      //   "https://modelslab.com/api/v6/images/img2img",
+      //   requestOptions
+      // );
       // const data = await response.json();
       console.log("inimi responsenya", response);
       // console.log("inimi responsenya", dataImage.data)
       const data = await response.json();
       console.log("ini datanya", data);
-      if (data.status === "processing") {
-        // if (data.data.status === "processing") {
-        const idFetch = data.id;
-        // const idFetch = data.data.id;
+      // if (data.status === "processing") {
+        if (data.data.status === "processing") {
+        // const idFetch = data.id;
+        const idFetch = data.data.id;
 
         // Polling function
         const pollForImage = async () => {
@@ -205,7 +209,7 @@ export default function Home() {
             const polling = setInterval(async () => {
               const rawFetch = JSON.stringify({
                 // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-                key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
+                key: "nFYjWffy0omPsKDb8LV6kvSQ46y3azAwUfcaJertHHsatZyG9gYjLe8ua5Lu",
               });
 
               const requestOptionsFetch = {
@@ -216,8 +220,8 @@ export default function Home() {
               };
 
               const responseFetch = await fetch(
-                // `https://modelslab.com/api/v6/realtime/fetch/${idFetch}`,
-                `https://modelslab.com/api/v6/images/fetch/${idFetch}`,
+                `https://modelslab.com/api/v6/realtime/fetch/${idFetch}`,
+                // `https://modelslab.com/api/v6/images/fetch/${idFetch}`,
                 requestOptionsFetch
               );
 
@@ -246,10 +250,10 @@ export default function Home() {
         };
 
         pollForImage();
-      } else if (data.status === "success") {
-        // } else if (data.data.status === "success") {
-        setImageUrl(data.output[0]);
-        // setImageUrl(data.data.output[0]);
+      // } else if (data.status === "success") {
+        } else if (data.data.status === "success") {
+        // setImageUrl(data.output[0]);
+        setImageUrl(data.data.output[0]);
         // setLoading(false);
       } else {
         console.log(data.error);
