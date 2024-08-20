@@ -5,6 +5,7 @@ import React, { Suspense, useState } from "react";
 import Object from "./Object";
 import Button from "../../component/template/Button";
 import Input from "../../component/template/Input";
+import Image from "next/image";
 
 export default function Scene() {
   const [items, setItems] = useState(false);
@@ -27,6 +28,13 @@ export default function Scene() {
 
   return (
     <div className="w-full h-[100vh] relative">
+      <div className="absolute z-20 top-2 left-1/2 transform -translate-x-1/2">
+        <div className="bg-red-200">
+          <div className="px-[1rem] py-[.5rem] rounded-md">
+            ksd
+          </div>
+        </div>
+      </div>
       <div className="w-[20%] flex justify-start absolute z-10">
         <div className="w-full h-[100vh] shadow-md bg-white border border-r-[1px] border-gray-200 px-[1rem] py-[1rem]">
           <div className="grid grid-rows-4 grid-flow-col gap-4">
@@ -49,10 +57,12 @@ export default function Scene() {
           </div>
         </div>
       </div>
-      <Canvas>
-        <Environment preset="studio" />
+      
+      <Canvas style={{backgroundColor: "#FDFDFD"}}>
+        <Environment preset="city" />
         <OrbitControls />
-        <ambientLight intensity={0.5} />
+        {/* <ambientLight intensity={3} /> */}
+        <directionalLight intensity={3} position={[0, 3, 2]}/>
         <mesh>
           <Center>
             <Suspense>

@@ -1,10 +1,12 @@
 "use client";
 import { useSnapshot } from "valtio";
 // import state from "../../function/state";
-import { useGLTF } from "@react-three/drei";
+import { Decal, useGLTF } from "@react-three/drei";
+import * as THREE from "three"
 import { useRef } from "react";
 import { Group } from "three";
 import { proxy } from "valtio";
+import { useLoader } from "@react-three/fiber";
 const state = proxy({
   current: null,
   items: {
@@ -17,6 +19,7 @@ const state = proxy({
 });
 
 export function Model(props:any) {
+  const texture = useLoader(THREE.TextureLoader, './wall.jpg');
   const { nodes, materials } = useGLTF('/yang menar.glb')
   const handleClick = (e:any) => {
     console.log(e)
@@ -54,6 +57,8 @@ export function Model(props:any) {
   const newScaleZ = roundedNumberLength;
   console.log("ini nilainya", )
   console.log("ini lebarnya", props.data.count)
+
+  
   return (
     <group {...props} dispose={null}>
       <mesh
@@ -61,10 +66,11 @@ export function Model(props:any) {
         castShadow
         receiveShadow
         geometry={nodes.dinding.geometry}
-        material={materials.Material}
+        material={materials['Material']}
         position={[1.117, 1.879, -0.799]}
         scale={[roundedNumber, roundedNumberHight , 1.502]}
-      />
+      >
+      </mesh>
       <mesh
       onClick={() => handleClick("lantai")}
         castShadow
@@ -73,25 +79,27 @@ export function Model(props:any) {
         material={materials['Material.004']}
         position={[1.117 , 1.897, -2.300 + newScaleZ]}
         scale={[roundedNumber,1.501,roundedNumberLength]}
-      />
-      {/* <mesh
+      >
+      </mesh>
+      <mesh
       onClick={() => handleClick("uv")}
         castShadow
         receiveShadow
         geometry={nodes.uv_board.geometry}
         material={materials['Material.003']}
         position={[1.111, 2.929, -2.286]}
-        scale={[0.763, 0.499, 0.319]}
-      /> */}
+        scale={[0.563, 0.499, 0.319]}
+      />
       <mesh
       onClick={() => handleClick("wallpanel kanan")}
         castShadow
         receiveShadow
         geometry={nodes.wallpanel_kanan.geometry}
-        material={materials['Material.005']}
+        material={materials['Material.004']}
         position={[1.041 + roundedNumber, 1.875 + roundedNumberWall, -2.295]}
         scale={[1, roundedNumberWall, 1]}
-      />
+      >
+      </mesh>
       {Array.from({ length: props.data.count }).map((_, index) => (
         <mesh
           key={`wallpanel_kiri_${index}`}
@@ -99,9 +107,9 @@ export function Model(props:any) {
           castShadow
           receiveShadow
           geometry={nodes.wallpanel_kanan001.geometry}
-          material={materials['Material.006']}
+          material={materials['Material.004']}
           position={[
-            1.041 - roundedNumber + index * 0.155, 
+            1.200 - roundedNumber + index * 0.155, 
             1.875 + roundedNumberWall, 
             -2.295
           ]}
