@@ -1,40 +1,46 @@
 "use client";
 import { Center, Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Object from "./Object";
 import Button from "../../component/template/Button";
 import Input from "../../component/template/Input";
 import Image from "next/image";
+import Backdrop from "./Backdrop";
+import { getProduct } from "../../function/fetch/fetch";
 
 export default function Scene() {
   const [items, setItems] = useState(false);
   const [theData, setTheData] = useState({
     width: 0,
     length:0,
-    hight:0
-  })
+    hight:0,
+    color:""
+  });
+  const [products, setProducts] = useState([]);
   
-  const handleClick = () => {
-    console.log("ommaleka");
-    setItems(!items);
+  const handleClick = (e:any) => {
+    setTheData({ ...theData, "color": e });
   };
   
   const handleInput = (e:any) => {
     setTheData({ ...theData, [e.target.name]: parseFloat(e.target.value) });
   }
 
-  console.log(theData)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await getProduct();
+        setProducts(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <div className="w-full h-[100vh] relative">
-      <div className="absolute z-20 top-2 left-1/2 transform -translate-x-1/2">
-        <div className="bg-red-200">
-          <div className="px-[1rem] py-[.5rem] rounded-md">
-            ksd
-          </div>
-        </div>
-      </div>
       <div className="w-[20%] flex justify-start absolute z-10">
         <div className="w-full h-[100vh] shadow-md bg-white border border-r-[1px] border-gray-200 px-[1rem] py-[1rem]">
           <div className="grid grid-rows-4 grid-flow-col gap-4">
@@ -57,12 +63,36 @@ export default function Scene() {
           </div>
         </div>
       </div>
-      
+      <div className="absolute bg-red-200 w-full z-20 flex justify-end bg-transparent pointer-events-none space-x-[1rem] p-[1rem]">
+        {
+          products.map((item: any, key: any) => (
+             <button
+               onClick={() => handleClick(item.description)}
+               className="p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start cursor-pointer pointer-events-auto"
+             >
+               <div className="w-full justify-center flex">
+                <div>
+                  <p>{item.name}</p>
+                  <div className="flex justify-center">
+                   <Image
+                     src={item.image}
+                     alt=""
+                     width={500}
+                     height={500}
+                     className="w-[3rem]"
+                   />
+                  </div>
+                  </div>
+                </div>
+             </button>
+          ))
+        }
+      </div>
       <Canvas style={{backgroundColor: "#FDFDFD"}}>
         <Environment preset="city" />
         <OrbitControls />
         {/* <ambientLight intensity={3} /> */}
-        <directionalLight intensity={3} position={[0, 3, 2]}/>
+        <directionalLight intensity={3} position={[0, 3, 5]}/>
         <mesh>
           <Center>
             <Suspense>
