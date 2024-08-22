@@ -10,7 +10,7 @@ export default function DropDown(props) {
                     name={props.name}
                     className={`${props.className} w-full focus:outline-none focus:ring-0 text-black bg-[#FBFBFB]`}
                 >
-                    <option value="" disabled hidden>
+                    <option value="">
                         Select
                     </option>
                     {props.options && props.options.map((option, index) => (
