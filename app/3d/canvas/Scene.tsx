@@ -8,6 +8,7 @@ import Input from "../../component/template/Input";
 import Image from "next/image";
 import Backdrop from "./Backdrop";
 import { getProduct } from "../../function/fetch/fetch";
+import SketchPicker from "react-color";
 
 export default function Scene() {
   const [items, setItems] = useState(false);
@@ -18,6 +19,7 @@ export default function Scene() {
     color:""
   });
   const [products, setProducts] = useState([]);
+  const [color, setColor] = useState("")
   
   const handleClick = (e:any) => {
     setTheData({ ...theData, "color": e });
@@ -39,11 +41,12 @@ export default function Scene() {
     fetchProducts();
   }, []);
 
-  console.log(localStorage.getItem("width"))
-
+  const changeColor = (e:any) => {
+    setColor(e.hex)
+  }
   return (
     <div className="w-full h-[100vh] relative">
-      <div className="w-[20%] flex justify-start absolute z-10">
+      <div className="w-[20%] flex justify-start absolute z-10 bg-opacity-50 backdrop-filter backdrop-blur-md">
         <div className="w-full h-[100vh] shadow-md bg-white border border-r-[1px] border-gray-200 px-[1rem] py-[1rem]">
           <div className="grid grid-rows-4 grid-flow-col gap-4">
             <div>
@@ -63,14 +66,16 @@ export default function Scene() {
               <input onChange={handleInput} name="count"/>
             </div>
           </div>
+          <SketchPicker color={color} onChange={(color:any) => changeColor(color)} disableAlpha/>
         </div>
       </div>
       <div className="absolute bg-red-200 w-full z-20 flex justify-end bg-transparent pointer-events-none space-x-[1rem] p-[1rem]">
         {
           products.map((item: any, key: any) => (
              <button
+             key={key}
                onClick={() => handleClick(item.description)}
-               className="p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start cursor-pointer pointer-events-auto"
+               className="p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start cursor-pointer pointer-events-auto bg-white bg-opacity-50 backdrop-filter backdrop-blur-md"
              >
                <div className="w-full justify-center flex">
                 <div>
@@ -94,11 +99,11 @@ export default function Scene() {
         <Environment preset="city" />
         <OrbitControls />
         {/* <ambientLight intensity={3} /> */}
-        <directionalLight intensity={3} position={[0, 3, 5]}/>
+        <directionalLight intensity={3} position={[35, 1, 10]}/>
         <mesh>
           <Center>
             <Suspense>
-              <Object ini={items} data={theData}/>
+              <Object ini={items} data={theData} color={color}/>
             </Suspense>
           </Center>
         </mesh>

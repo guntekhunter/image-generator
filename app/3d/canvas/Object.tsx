@@ -40,10 +40,10 @@ export function Model(props: any) {
   const scaleFactorHight = Math.min(maxScale, Math.max(minScaleHight, (props.data.hight || hight/ 3) * originalHight));
   const scaleFactorWall = Math.min(maxScale, Math.max(minScaleWall, (props.data.hight || hight/ 3) * originalWall));
 
-  let roundedNumber = 1.502;
+  let roundedNumber = 6.502;
   let roundedNumberLength = 1.501;
   let roundedNumberHight = 0.014;
-  let roundedNumberWall = 1.501;
+  let roundedNumberWall = 1;
 
   if (width || hight || length) {
     roundedNumber = parseFloat(scaleFactor.toFixed(3));
@@ -66,19 +66,18 @@ export function Model(props: any) {
     }
   }, [groupRef.current]);
 
-  const wallHeightOffset = roundedNumberHight / 2;
-const panelHeightOffset = roundedNumberWall / 2;
 
-const wallPanelYPosition = 1.875 + wallHeightOffset - panelHeightOffset;
+console.log(props.color)
   return (
     <group ref={groupRef} {...props} dispose={null}>
       <mesh
         onClick={() => handleClick("dinding")}
         castShadow
         receiveShadow
+        material-color={props.color}
         geometry={nodes.dinding.geometry}
         material={materials.Material}
-        position={[1.117, 1.879, -0.799]}
+        position={[1.117, 1, -0.799]}
         scale={[roundedNumber, roundedNumberHight, 1.502]}
       />
       <mesh
@@ -87,9 +86,18 @@ const wallPanelYPosition = 1.875 + wallHeightOffset - panelHeightOffset;
         receiveShadow
         geometry={nodes.lantai.geometry}
         material={materials['Material.004']}
-        position={[1.117, 1.897, -2.300 + newScaleZ]}
+        position={[1.117, 1, -2.300 + newScaleZ]}
         rotation={[0, Math.PI / 2, 0]}
         scale={[roundedNumberLength, 1, roundedNumber]}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.wallpanel_kanan002.geometry}
+        material={materials['Material.002']}
+        position={[1.117+ roundedNumber, 1 + roundedNumberWall, -2.198]}
+        rotation={[Math.PI, Math.PI / 2, 0]}
+        scale={[-1, roundedNumberWall, -1]}
       />
       {/* <mesh
         onClick={() => handleClick("uv")}
@@ -101,13 +109,24 @@ const wallPanelYPosition = 1.875 + wallHeightOffset - panelHeightOffset;
         scale={[0.563, 0.499, 0.319]}
       /> */}
       <mesh
+        castShadow
+        receiveShadow
+        material-color={props.color}
+        geometry={nodes.dinding001.geometry}
+        material={materials['Material.001']}
+        position={[2.652 + roundedNumber, 1, -2.310 + newScaleZ]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={[roundedNumberLength, roundedNumberHight, 1.502]}
+      />
+      
+      <mesh
         onClick={() => handleClick("wallpanel kanan")}
         castShadow
         receiveShadow
         geometry={nodes.wallpanel_kanan.geometry}
         material={materials[`${props.data.color}`]}
-        position={[1.041 + roundedNumber, 1.875 + roundedNumberWall, -2.295]}
-        scale={[1.502, roundedNumberWall, 1.502]}
+        position={[1.041 + roundedNumber, 1 + roundedNumberWall, -2.295]}
+        scale={[1, roundedNumberWall, 1]}
       />
       {Array.from({ length: props.data.count }).map((_, index) => (
         <mesh
@@ -119,12 +138,20 @@ const wallPanelYPosition = 1.875 + wallHeightOffset - panelHeightOffset;
           material={materials[`${props.data.color}`]}
           position={[
             1.200 - roundedNumber + index * 0.155,
-            1.875 + roundedNumberWall,
+            .99 + roundedNumberWall,
             -2.295
           ]}
-          scale={[1.502, roundedNumberWall, 1]}
+          scale={[1, roundedNumberWall, 1]}
         />
       ))}
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Cube.geometry}
+        material={nodes.Cube.material}
+        position={[1.122, 1 + ((roundedNumberWall*100)/50.6), -2.300 + newScaleZ]}
+        scale={[roundedNumber, 0.015 ,roundedNumberLength]}
+      />
     </group>
   );
 }
@@ -135,7 +162,7 @@ export default function Object(props: any) {
   const groups = useRef<Group>(null);
   return (
     <group ref={groups}>
-      <Model item={props.ini} data={props.data} />
+      <Model item={props.ini} data={props.data} color={props.color}/>
     </group>
   );
 }

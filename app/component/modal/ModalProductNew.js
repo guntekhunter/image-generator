@@ -113,27 +113,6 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                 {
                     opened === "wallpanel" ? (
                         <>
-                            <div className="grid grid-cols-2 gap-[.8rem]">
-                                <DropDown
-                                    onChange={handleChange}
-                                    value={count}
-                                    name="dropdown"
-                                    className="custom-dropdown"
-                                    options={options}
-                                >
-                                    Jumlah Dinding
-                                </DropDown>
-
-                                <DropDown
-                                    onChange={handleChangeType}
-                                    value={type}
-                                    name="dropdown"
-                                    className="custom-dropdown"
-                                    options={typeOptions}
-                                >
-                                    Type Wallpanel
-                                </DropDown>
-                            </div>
                             <DropDown
                                 onChange={detailProduct}
                                 value={width}
