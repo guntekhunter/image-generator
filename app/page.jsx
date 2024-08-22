@@ -80,6 +80,8 @@ export default function Home() {
   const [enought, setEnought] = useState(true);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [harga, setHarga] = useState(0);
+  const [budget, setBudget] = useState(0)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -90,12 +92,14 @@ export default function Home() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  console.log("ini budget", budget)
   const handleInputRequirenment = (e) => {
     const { name, value } = e.target;
     if (e.target.name === "budget") {
       const numericValue = value.replace(/\./g, ""); // Remove existing dots
       const formattedValue = formatNumber(numericValue);
       setRequiredData({ ...requiredData, [name]: formattedValue });
+      setBudget(value)
     } else if (
       e.target.name === "width" ||
       e.target.name === "length" ||
@@ -266,287 +270,6 @@ export default function Home() {
     setLoading(false);
   };
 
-  // const handleGenerate = async (e) => {
-  //   if (
-  //     !requiredData.budget ||
-  //     !requiredData.width ||
-  //     !requiredData.length ||
-  //     !requiredData.hight ||
-  //     !requiredData.products ||
-  //     !requiredData.style ||
-  //     !requiredData.type ||
-  //     !imageUrlUploaded
-  //   ) {
-  //     const missingFields = [];
-  //     if (!requiredData.budget) missingFields.push("budget");
-  //     if (!requiredData.width) missingFields.push("width");
-  //     if (!requiredData.length) missingFields.push("length");
-  //     if (!requiredData.hight) missingFields.push("hight"); // assuming "hight" is a typo and you meant "height"
-  //     if (!requiredData.products || requiredData.products.length === 0)
-  //       missingFields.push("products");
-  //     if (!requiredData.style) missingFields.push("style");
-  //     if (!requiredData.type) missingFields.push("type");
-  //     if (!imageUrlUploaded) missingFields.push("image");
-  //     setRequired(missingFields);
-  //   } else {
-  //     e.preventDefault();
-  //     setLoading(true);
-
-  //     setSummary("");
-  //     const productDetails = {
-  //       wallpanel: {
-  //         harga: 40000, // in RP
-  //         panjang: "2.90 m",
-  //         lebar: "16 cm",
-  //       },
-  //       vinyl: {
-  //         harga: 300000, // in RP
-  //         panjang: "91 cm",
-  //         lebar: "12.2 cm",
-  //         dus: "36 lembar dalam satu dus",
-  //       },
-  //       plafonPVC: {
-  //         harga: 17000, // in RP
-  //         panjang: "6 meter dan 4 meter",
-  //         lebar: "20 cm",
-  //       },
-  //     };
-
-  //     const calculateAffordableUnits = (budget, price) => {
-  //       return Math.floor(budget / price);
-  //     };
-  //     setBudgetAnalysist("");
-
-  //     try {
-  //       const availableProducts = requiredData.products
-  //         .map((product) => {
-  //           const details = productDetails[product];
-  //           if (details) {
-  //             const affordableUnits = calculateAffordableUnits(
-  //               requiredData.budget,
-  //               details.harga
-  //             );
-  //             setAfordable(affordableUnits);
-  //             return `
-  //             ${product}:
-  //             harga = RP. ${details.harga}
-  //             panjang = ${details.panjang}
-  //             lebar = ${details.lebar}
-  //             ${details.dus ? `dus = ${details.dus}` : ""}
-  //             Anda dapat membeli ${affordableUnits} unit dengan budget ${
-  //               requiredData.budget
-  //             }
-  //           `;
-  //           }
-  //           return "";
-  //         })
-  //         .join("\n");
-
-  //       const inputText = `buat analisa kebutuhan [${requiredData.products.join(
-  //         ", "
-  //       )}], untuk budget ${
-  //         requiredData.budget
-  //       } ini informasi tentang kebutuhan pengguna:
-  //       panjang ruangan = ${requiredData.length}
-  //       lebar ruangan = ${requiredData.width}
-  //       tinggi ruangan = ${requiredData.hight}
-  //       hanya ini produk yang dapat didapat:
-  //       ${availableProducts}
-
-  //       berikan kesimpulan dibagian terakhir perhitungan dalam bentuk tabel, berisi nama produk, jumlah lembar, jumlah dus dan harga, pada bagian bawah berikan bagian total, untuk informasi tambahan plafon PVC itu dibeli perlembar, lantai vinyl dibeli perdus, dan wallpanel dibeli perlembar berikan respon dalam bentuk markup language
-  //       `;
-
-  //       const handleError = (error) => {
-  //         console.error("Error:", error);
-  //       };
-
-  //       const handleChunk = (chunk) => {
-  //         setSummary((prev) => prev + chunk);
-  //       };
-  //       fetchData(inputText, handleChunk, handleError)
-  //         .then((response) => {
-  //           setBudgetAnalysist(
-  //             `response the style of the room is ${requiredData.style}, the room type is a ${requiredData.type} so only add ${requiredData.products} to the image final design`
-  //           );
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error fetching data:", error);
-  //         });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const sendRequest = async () => {
-  //     try {
-  //       const myHeaders = new Headers();
-  //       myHeaders.append("Content-Type", "application/json");
-
-  //       const productsList = requiredData.products.join(", ");
-
-  //       const raw = JSON.stringify({
-  //         // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-  //         key: "eeef3lDIFdW8fBz34korJwc2xlCn7TcBEHy9WeWXHJamojWC0Cfmf94NFozr",
-  //         prompt:
-  //           "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wall white",
-  //         // prompt: `ultra realistic ${requiredData.style} ${
-  //         //   requiredData.type
-  //         // } room, add a forniture that will fit into
-  //         // ${requiredData.type} room,
-  //         // ${
-  //         //   productsList.includes("uv board")
-  //         //     ? "In the center of the wall, include a large UV marble panel that features a light cream color with subtle gray veining. The panel should have a polished finish to reflect light softly and add a luxurious touch to the space."
-  //         //     : ""
-  //         // }
-  //         // ${
-  //         //   productsList.includes("wallpanel")
-  //         //     ? `Create an image of a wooden slat wall panel. The panel is made of light-colored wood, possibly oak, and features vertical slats with equal spacing between them. The slats are thin, elongated, and evenly distributed, creating a uniform pattern. The top of the panel is bordered by a smooth, flat piece of wood that runs horizontally`
-  //         //     : "white wall"
-  //         // } and for the floor is
-  //         // ${
-  //         //   productsList.includes("vinyl")
-  //         //     ? "add a vinyl floor, The flooring has a natural wood grain pattern with subtle wood patern. The planks are wide, and the surface appears smooth with a matte finish. The wood grain is linear and runs along the length of the planks, giving it a clean and contemporary look. This type of vinyl flooring would be suitable for a modern, minimalist space or any setting that benefits from a warm, natural wood appearance."
-  //         //     : "featuring a ceramic tile floor. The tiles are large, square, and have a smooth, matte finish. The floor should be white and evenly laid out, creating a clean and modern appearance. The room itself is minimalist, with plain white walls that emphasize the sleek, contemporary look of the ceramic tile flooring."
-  //         // }`,
-  //         negative_prompt: formData.negative_prompt || "bad quality",
-  //         init_image: imageUrlUploaded,
-  //         width: "512",
-  //         height: "512",
-  //         samples: "1",
-  //         temp: false,
-  //         only_mask: true,
-  //         safety_checker: false,
-  //         strength: 1,
-  //         seed: formData.seed || null,
-  //         webhook: null,
-  //         track_id: null,
-  //         enhance_prompt: true,
-  //         num_inference_steps: 41,
-  //         alpha_matting_foreground_threshold: 300,
-  //         guidance_scale: 7,
-  //         // model_id: "realistic-vision-v13",
-  //         model_id: "interiordesignsuperm",
-  //         // model_id: "xsachi-interiordesgi"
-  //         // model_id: "dvarch"
-  //         // model_id:"midjourney-v4"
-  //         // model_id: "dream-shaper-8797"
-  //       });
-
-  //       const requestOptions = {
-  //         method: "POST",
-  //         headers: myHeaders,
-  //         body: raw,
-  //         redirect: "follow",
-  //       };
-
-  //       // const response = await fetch("/api/image-generator-v2", requestOptions);
-  //       const response = await fetch(
-  //         "https://modelslab.com/api/v6/realtime/img2img",
-  //         requestOptions
-  //       );
-  //       // const data = await response.json();
-  //       console.log("inimi responsenya", response);
-  //       // console.log("inimi responsenya", dataImage.data)
-  //       const data = await response.json();
-  //       console.log("ini datanya", data);
-  //       if (data.status === "processing") {
-  //         // if (data.data.status === "processing") {
-  //         const idFetch = data.id;
-  //         // const idFetch = data.data.id;
-
-  //         // Polling function
-  //         const pollForImage = async () => {
-  //           try {
-  //             const pollInterval = 5000; // Poll every 5 seconds
-  //             const polling = setInterval(async () => {
-  //               const rawFetch = JSON.stringify({
-  //                 // key: "pzAFP9s7D4yHsnXhzaPxKZtDkfF3BGldnd4s4HIgLUSdkrlisXaFJeRrGDG1",
-  //                 key: "mRamFZhihfu3f7v9chDr9UmvbeFVl5gMTr4iXwsQ3qS7zf57o7L3wUGzQdxB",
-  //               });
-
-  //               const requestOptionsFetch = {
-  //                 method: "POST",
-  //                 headers: myHeaders,
-  //                 body: rawFetch,
-  //                 redirect: "follow",
-  //               };
-
-  //               const responseFetch = await fetch(
-  //                 `https://modelslab.com/api/v6/realtime/fetch/${idFetch}`,
-  //                 requestOptionsFetch
-  //               );
-
-  //               const dataImage = await responseFetch.json();
-  //               console.log(dataImage);
-  //               if (dataImage.status) {
-  //                 if (dataImage.status === "success") {
-  //                   setImageUrl(dataImage.output[0]);
-  //                   console.log(dataImage.output[0]);
-  //                   clearInterval(polling);
-  //                   setLoading(false);
-  //                 } else if (dataImage.status === "processing") {
-  //                   console.log("Processing... Please wait.");
-  //                 }
-  //               } else {
-  //                 setError("Error fetching image status.");
-  //                 clearInterval(polling);
-  //                 setLoading(false);
-  //               }
-  //             }, pollInterval);
-  //           } catch (error) {
-  //             console.log("Polling error", error);
-  //             setError("Error during polling.");
-  //             setLoading(false);
-  //           }
-  //         };
-
-  //         pollForImage();
-  //       } else if (data.status === "success") {
-  //         // } else if (data.data.status === "success") {
-  //         setImageUrl(data.output[0]);
-  //         // setImageUrl(data.data.output[0]);
-  //         setLoading(false);
-  //       } else {
-  //         console.log(data.error);
-  //       }
-  //     } catch (error) {
-  //       console.log("Error", error);
-  //       setError("An error occurred");
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (prompt) {
-  //     sendRequest();
-  //   } else {
-  //     console.log("No prompt provided.");
-  //   }
-  // }, [prompt, imageUrlUploaded, formData]);
-
-  // useEffect(() => {
-  //   if (budgetAnalysist) {
-  //     const prompter = async (e) => {
-  //       try {
-  //         const inputText = budgetAnalysist;
-  //         const data = fetchPrompt(inputText)
-  //           .then((response) => {
-  //             setPrompt(response.content);
-  //           })
-  //           .catch((error) => {
-  //             console.error("Error fetching data:", error);
-  //           });
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     prompter();
-  //   } else {
-  //     console.log(error);
-  //   }
-  // }, [budgetAnalysist]);
-
   const handleProducts = (e) => {
     console.log("ini product", e);
     if (requiredData.products.includes(e)) {
@@ -584,10 +307,11 @@ export default function Home() {
 
   const openModalBudget = () => {
     setModalBudgetIsOpen(!modalBudgetIsOpen);
-    setTimeout(() => setModalBudgetIsOpen(false), 3000);
+    // setTimeout(() => setModalBudgetIsOpen(false), 3000);
   };
 
   const saveProductDetail = (status, productName, productDetail) => {
+    console.log("ini",productDetail)
     setModalBudgetIsOpen(status);
     setRequiredData((prevData) => {
       if (prevData.products.includes(productName)) {
@@ -619,7 +343,7 @@ export default function Home() {
       const finalCount = budget - final;
       const formattedFinalCount = finalCount.toLocaleString("id-ID");
 
-      if (budget > final) {
+      if (budget >= final) {
         setProducts((prevProducts) => [
           ...prevProducts,
           { name: "vinyl", quantity: Math.ceil(dus), price: final },
@@ -629,6 +353,7 @@ export default function Home() {
           budget: formattedFinalCount,
         }));
       } else {
+        setHarga(final)
         setEnought(false);
       }
     } else if (productName === "wallpanel") {
@@ -651,7 +376,7 @@ export default function Home() {
       const finalCount = budget - final;
       const formattedFinalCount = finalCount.toLocaleString("id-ID");
 
-      if (budget > finalCount || budget > final) {
+      if (budget > finalCount || budget >= final) {
         if (requiredData.products.includes("vinyl")) {
           setProducts((prevProducts) => [
             ...prevProducts,
@@ -676,6 +401,7 @@ export default function Home() {
           }));
         }
       } else {
+        setHarga(final)
         setEnought(false);
       }
     } else if (productName === "plafon") {
@@ -684,14 +410,17 @@ export default function Home() {
           20 /
           productDetail.plafonWidth
       );
+
       const final = Math.ceil(plafonCount) * 300000;
+      console.log("iniminya", productDetail.plafonWidth)
+      console.log(final)
       const budgetString = requiredData.budget;
       const cleanedBudgetString = budgetString.replace(/\./g, "");
       const budget = parseInt(cleanedBudgetString, 10);
       const finalCount = budget - final;
       const formattedFinalCount = finalCount.toLocaleString("id-ID");
 
-      if (budget > final) {
+      if (budget >= final) {
         setProducts((prevProducts) => [
           ...prevProducts,
           { name: "plafon", quantity: plafonCount, price: final },
@@ -701,6 +430,7 @@ export default function Home() {
           budget: formattedFinalCount,
         }));
       } else {
+        setHarga(final)
         setEnought(false);
       }
     } else if (productName === "uv board") {
@@ -715,7 +445,7 @@ export default function Home() {
       console.log("ini Budget", budget);
       const finalCount = budget - final;
       const formattedFinalCount = finalCount.toLocaleString("id-ID");
-      if (budget > final) {
+      if (budget >= final) {
         setProducts((prevProducts) => [
           ...prevProducts,
           { name: "uv board", quantity: uvCount, price: final },
@@ -725,11 +455,12 @@ export default function Home() {
           budget: formattedFinalCount,
         }));
       } else {
+        setHarga(final)
         setEnought(false);
       }
     }
     setModalBudgetIsOpen(true);
-    setTimeout(() => setModalBudgetIsOpen(false), 3000);
+    // setTimeout(() => setModalBudgetIsOpen(false), 3000);
   };
 
   useEffect(() => {
@@ -766,6 +497,7 @@ export default function Home() {
         isOpen={modalBudgetIsOpen}
         budget={requiredData.budget}
         enought={enought}
+        harga={harga}
       />
       <ModalProduct
         isOpen={isModalOpen}
@@ -787,7 +519,7 @@ export default function Home() {
                   Mudah
                 </p>
                 <div
-                  className={`h-[3rem] flex justify-around px-[1.5rem] rounded-[10px] ${
+                  className={`h-[3rem] flex justify-around px-[1.5rem] rounded-[10px] text-black ${
                     required.includes("budget")
                       ? "border-[1px] border-red-400 bg-red-200"
                       : "border-[#EDEDED] bg-white"

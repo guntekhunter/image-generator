@@ -10,7 +10,7 @@ export const createProduct = async (data: any) => {
 };
 export const getProduct = async () => {
   try {
-    const res = await axios.get("api/create-product");
+    const res = await axios.get("/api/create-product");
     return res;
   } catch (error) {
     console.log(error);

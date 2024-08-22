@@ -22,6 +22,9 @@ export function Model(props: any) {
   const handleClick = (e: any) => {
     console.log(e);
   };
+  const width = parseInt(localStorage.getItem("width"))
+  const hight = parseInt(localStorage.getItem("hight"))
+  const length = parseInt(localStorage.getItem("length"))
 
   const originalWidth = 1.502;
   const originalLength = 1.501;
@@ -32,17 +35,17 @@ export function Model(props: any) {
   const minScaleHight = 0.0;
   const minScaleWall = 0.1;
 
-  const scaleFactor = Math.min(maxScale, Math.max(minScale, (props.data.width / 3) * originalWidth));
-  const scaleFactorLength = Math.min(maxScale, Math.max(minScale, (props.data.length / 3) * originalLength));
-  const scaleFactorHight = Math.min(maxScale, Math.max(minScaleHight, (props.data.hight / 3) * originalHight));
-  const scaleFactorWall = Math.min(maxScale, Math.max(minScaleWall, (props.data.hight / 3) * originalWall));
+  const scaleFactor = Math.min(maxScale, Math.max(minScale, (props.data.width || width / 3) * originalWidth));
+  const scaleFactorLength = Math.min(maxScale, Math.max(minScale, (props.data.length || length / 3) * originalLength));
+  const scaleFactorHight = Math.min(maxScale, Math.max(minScaleHight, (props.data.hight || hight/ 3) * originalHight));
+  const scaleFactorWall = Math.min(maxScale, Math.max(minScaleWall, (props.data.hight || hight/ 3) * originalWall));
 
   let roundedNumber = 1.502;
   let roundedNumberLength = 1.501;
   let roundedNumberHight = 0.014;
-  let roundedNumberWall = 1;
+  let roundedNumberWall = 1.501;
 
-  if (props.data.width || props.data.hight || props.data.length) {
+  if (width || hight || length) {
     roundedNumber = parseFloat(scaleFactor.toFixed(3));
     roundedNumberLength = parseFloat(scaleFactorLength.toFixed(3));
     roundedNumberHight = parseFloat(scaleFactorHight.toFixed(3));
@@ -63,7 +66,10 @@ export function Model(props: any) {
     }
   }, [groupRef.current]);
 
-  console.log(props.data.color)
+  const wallHeightOffset = roundedNumberHight / 2;
+const panelHeightOffset = roundedNumberWall / 2;
+
+const wallPanelYPosition = 1.875 + wallHeightOffset - panelHeightOffset;
   return (
     <group ref={groupRef} {...props} dispose={null}>
       <mesh
@@ -85,7 +91,7 @@ export function Model(props: any) {
         rotation={[0, Math.PI / 2, 0]}
         scale={[roundedNumberLength, 1, roundedNumber]}
       />
-      <mesh
+      {/* <mesh
         onClick={() => handleClick("uv")}
         castShadow
         receiveShadow
@@ -93,7 +99,7 @@ export function Model(props: any) {
         material={materials['Material.003']}
         position={[1.111, 2.929, -2.286]}
         scale={[0.563, 0.499, 0.319]}
-      />
+      /> */}
       <mesh
         onClick={() => handleClick("wallpanel kanan")}
         castShadow
@@ -101,7 +107,7 @@ export function Model(props: any) {
         geometry={nodes.wallpanel_kanan.geometry}
         material={materials[`${props.data.color}`]}
         position={[1.041 + roundedNumber, 1.875 + roundedNumberWall, -2.295]}
-        scale={[1, roundedNumberWall, 1]}
+        scale={[1.502, roundedNumberWall, 1.502]}
       />
       {Array.from({ length: props.data.count }).map((_, index) => (
         <mesh
@@ -116,7 +122,7 @@ export function Model(props: any) {
             1.875 + roundedNumberWall,
             -2.295
           ]}
-          scale={[-1, roundedNumberWall, 1]}
+          scale={[1.502, roundedNumberWall, 1]}
         />
       ))}
     </group>

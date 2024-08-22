@@ -29,6 +29,7 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                 wallpanelWidth: e.target.value // Replace "yourItemHere" with the actual item you want to add
             }));
         } else if (opened === "plafon") {
+            console.log(e.target.value)
             setProductDetail((prev) => ({
                 ...prev,
                 plafonWidth: e.target.value // Replace "yourItemHere" with the actual item you want to add

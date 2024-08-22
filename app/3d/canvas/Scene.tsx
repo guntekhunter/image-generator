@@ -39,6 +39,8 @@ export default function Scene() {
     fetchProducts();
   }, []);
 
+  console.log(localStorage.getItem("width"))
+
   return (
     <div className="w-full h-[100vh] relative">
       <div className="w-[20%] flex justify-start absolute z-10">
