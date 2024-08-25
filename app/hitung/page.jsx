@@ -47,7 +47,7 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [harga, setHarga] = useState(0);
-  const [budget, setBudget] = useState(0)
+  const [budget, setBudget] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -62,7 +62,7 @@ export default function Home() {
       const numericValue = value.replace(/\./g, ""); // Remove existing dots
       const formattedValue = formatNumber(numericValue);
       setRequiredData({ ...requiredData, [name]: formattedValue });
-      setBudget(value)
+      setBudget(value);
     } else if (
       e.target.name === "width" ||
       e.target.name === "length" ||
@@ -115,8 +115,11 @@ export default function Home() {
   };
 
   const saveProductDetail = (status, productName, productDetail) => {
-    console.log("ini",productDetail)
+    setHarga(0);
+    console.log("ini", productDetail);
     setModalBudgetIsOpen(status);
+
+    // Update the product list based on the productName
     setRequiredData((prevData) => {
       if (prevData.products.includes(productName)) {
         return {
@@ -133,79 +136,76 @@ export default function Home() {
       }
     });
 
+    const calculateBudget = (budget, finalCost) => {
+      const formattedFinalCount = (budget - finalCost).toLocaleString("id-ID");
+      return {
+        finalCount: budget - finalCost,
+        formattedFinalCount,
+      };
+    };
+
+    const handleProductAddition = (productName, quantity, price, budget) => {
+      if (budget >= price) {
+        setProducts((prevProducts) => [
+          ...prevProducts,
+          { name: productName, quantity, price },
+        ]);
+        return true;
+      } else {
+        setHarga(price);
+        setEnought(false);
+        return false;
+      }
+    };
+
+    const budgetString = requiredData.budget;
+    const cleanedBudgetString = budgetString.replace(/\./g, "");
+    const budget = parseInt(cleanedBudgetString, 10);
+
     if (productName === "vinyl") {
       const vinylCount = Math.round(
         (requiredData.width * requiredData.length * 100) / 15 / 0.91
       );
       const dus = vinylCount / productDetail.vinylWidth;
       const final = Math.ceil(dus) * 440000;
-      setProductCount((prevState) => ({ ...prevState, vinyl: Math.ceil(dus) }));
-      const budgetString = requiredData.budget;
-      const cleanedBudgetString = budgetString.replace(/\./g, "");
-      const budget = parseInt(cleanedBudgetString, 10);
-      const finalCount = budget - final;
-      const formattedFinalCount = finalCount.toLocaleString("id-ID");
 
-      if (budget >= final) {
-        setProducts((prevProducts) => [
-          ...prevProducts,
-          { name: "vinyl", quantity: Math.ceil(dus), price: final },
-        ]);
+      const { finalCount, formattedFinalCount } = calculateBudget(
+        budget,
+        final
+      );
+
+      if (handleProductAddition("vinyl", Math.ceil(dus), final, budget)) {
         setRequiredData((prevState) => ({
           ...prevState,
           budget: formattedFinalCount,
         }));
-      } else {
-        setHarga(final)
-        setEnought(false);
       }
     } else if (productName === "wallpanel") {
-      const wallpanelCount = Math.round(
-        (requiredData.width * requiredData.hight * 100) /
-          productDetail.wallpanelWidth /
-          2.95
-      );
-      const final = wallpanelCount * 145000;
-      const budgetString = requiredData.budget;
-      const cleanedBudgetString = budgetString.replace(/\./g, "");
-      const budget = parseInt(cleanedBudgetString, 10);
-      const jumlahLembar = budget / 145000;
-      const finalCountWallpanel = Math.ceil(jumlahLembar);
-      const thePrize = finalCountWallpanel * 145000;
-      setProductCount((prevState) => ({
-        ...prevState,
-        wallpanel: finalCountWallpanel,
-      }));
-      const finalCount = budget - final;
-      const formattedFinalCount = finalCount.toLocaleString("id-ID");
-
-      if (budget > finalCount || budget >= final) {
-        if (requiredData.products.includes("vinyl")) {
-          setProducts((prevProducts) => [
-            ...prevProducts,
-            {
-              name: "wallpanel",
-              quantity: finalCountWallpanel,
-              price: finalCount,
-            },
-          ]);
-          setRequiredData((prevState) => ({
-            ...prevState,
-            budget: formattedFinalCount,
-          }));
-        } else {
-          setProducts((prevProducts) => [
-            ...prevProducts,
-            { name: "wallpanel", quantity: wallpanelCount, price: final },
-          ]);
-          setRequiredData((prevState) => ({
-            ...prevState,
-            budget: formattedFinalCount,
-          }));
-        }
+      let wallpanelCount;
+      if (requiredData.products.includes("vinyl")) {
+        const remainingBudget =
+          budget - products.find((p) => p.name === "vinyl").price;
+        const jumlahLembar = remainingBudget / 145000;
+        wallpanelCount = Math.ceil(jumlahLembar);
       } else {
-        setHarga(final)
-        setEnought(false);
+        wallpanelCount = Math.round(
+          (requiredData.width * requiredData.hight * 100) /
+            productDetail.wallpanelWidth /
+            2.95
+        );
+      }
+
+      const final = wallpanelCount * 145000;
+      const { finalCount, formattedFinalCount } = calculateBudget(
+        budget,
+        final
+      );
+
+      if (handleProductAddition("wallpanel", wallpanelCount, final, budget)) {
+        setRequiredData((prevState) => ({
+          ...prevState,
+          budget: formattedFinalCount,
+        }));
       }
     } else if (productName === "plafon") {
       const plafonCount = Math.round(
@@ -213,26 +213,18 @@ export default function Home() {
           20 /
           productDetail.plafonWidth
       );
-
       const final = Math.ceil(plafonCount) * 300000;
-      const budgetString = requiredData.budget;
-      const cleanedBudgetString = budgetString.replace(/\./g, "");
-      const budget = parseInt(cleanedBudgetString, 10);
-      const finalCount = budget - final;
-      const formattedFinalCount = finalCount.toLocaleString("id-ID");
 
-      if (budget >= final) {
-        setProducts((prevProducts) => [
-          ...prevProducts,
-          { name: "plafon", quantity: plafonCount, price: final },
-        ]);
+      const { finalCount, formattedFinalCount } = calculateBudget(
+        budget,
+        final
+      );
+
+      if (handleProductAddition("plafon", plafonCount, final, budget)) {
         setRequiredData((prevState) => ({
           ...prevState,
           budget: formattedFinalCount,
         }));
-      } else {
-        setHarga(final)
-        setEnought(false);
       }
     } else if (productName === "uv board") {
       const uvCount = Math.round(
@@ -240,28 +232,21 @@ export default function Home() {
       );
       const dus = uvCount / 36;
       const final = Math.ceil(dus) * 300000;
-      const budgetString = requiredData.budget;
-      const cleanedBudgetString = budgetString.replace(/\./g, "");
-      const budget = parseInt(cleanedBudgetString, 10);
-      console.log("ini Budget", budget);
-      const finalCount = budget - final;
-      const formattedFinalCount = finalCount.toLocaleString("id-ID");
-      if (budget >= final) {
-        setProducts((prevProducts) => [
-          ...prevProducts,
-          { name: "uv board", quantity: uvCount, price: final },
-        ]);
+
+      const { finalCount, formattedFinalCount } = calculateBudget(
+        budget,
+        final
+      );
+
+      if (handleProductAddition("uv board", uvCount, final, budget)) {
         setRequiredData((prevState) => ({
           ...prevState,
           budget: formattedFinalCount,
         }));
-      } else {
-        setHarga(final)
-        setEnought(false);
       }
     }
+
     setModalBudgetIsOpen(true);
-    // setTimeout(() => setModalBudgetIsOpen(false), 3000);
   };
 
   useEffect(() => {
@@ -293,11 +278,11 @@ export default function Home() {
   console.log(loading);
 
   const sendWidth = () => {
-    router.push("/3d")
-    localStorage.setItem("width", requiredData.width)
-    localStorage.setItem("hight", requiredData.hight)
-    localStorage.setItem("length", requiredData.length)
-  }
+    router.push("/3d");
+    localStorage.setItem("width", requiredData.width);
+    localStorage.setItem("hight", requiredData.hight);
+    localStorage.setItem("length", requiredData.length);
+  };
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
@@ -356,32 +341,32 @@ export default function Home() {
             Ukuran Ruangan
           </h2>
           <div className="grid grid-cols-2 gap-[1rem]">
-              <Input value={requiredData.budget}>Budget</Input>
-           
-              <Input
-                status={`${required.includes("width") ? "error" : ""}`}
-                name="width"
-                value={requiredData?.width !== 0 ? requiredData.width : " "}
-                onChange={handleInputRequirenment}
-              >
-                Lebar Ruangan (m)
-              </Input>
-              <Input
-                status={`${required.includes("length") ? "error" : ""}`}
-                name="length"
-                value={requiredData?.length !== 0 ? requiredData.length : " "}
-                onChange={handleInputRequirenment}
-              >
-                Panjang Ruangan (m)
-              </Input>
-              <Input
-                status={`${required.includes("hight") ? "error" : ""}`}
-                name="hight"
-                value={requiredData?.hight !== 0 ? requiredData.hight : " "}
-                onChange={handleInputRequirenment}
-              >
-                Tinggi Ruangan (m)
-              </Input>
+            <Input value={requiredData.budget}>Budget</Input>
+
+            <Input
+              status={`${required.includes("width") ? "error" : ""}`}
+              name="width"
+              value={requiredData?.width !== 0 ? requiredData.width : " "}
+              onChange={handleInputRequirenment}
+            >
+              Lebar Ruangan (m)
+            </Input>
+            <Input
+              status={`${required.includes("length") ? "error" : ""}`}
+              name="length"
+              value={requiredData?.length !== 0 ? requiredData.length : " "}
+              onChange={handleInputRequirenment}
+            >
+              Panjang Ruangan (m)
+            </Input>
+            <Input
+              status={`${required.includes("hight") ? "error" : ""}`}
+              name="hight"
+              value={requiredData?.hight !== 0 ? requiredData.hight : " "}
+              onChange={handleInputRequirenment}
+            >
+              Tinggi Ruangan (m)
+            </Input>
           </div>
         </section>
         <section>
@@ -508,7 +493,6 @@ export default function Home() {
             Lihat Ruangan
           </Button>
         </section>
-
       </div>
     </div>
   );

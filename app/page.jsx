@@ -81,7 +81,7 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [harga, setHarga] = useState(0);
-  const [budget, setBudget] = useState(0)
+  const [budget, setBudget] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -92,14 +92,14 @@ export default function Home() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  console.log("ini budget", budget)
+  console.log("ini budget", budget);
   const handleInputRequirenment = (e) => {
     const { name, value } = e.target;
     if (e.target.name === "budget") {
       const numericValue = value.replace(/\./g, ""); // Remove existing dots
       const formattedValue = formatNumber(numericValue);
       setRequiredData({ ...requiredData, [name]: formattedValue });
-      setBudget(value)
+      setBudget(value);
     } else if (
       e.target.name === "width" ||
       e.target.name === "length" ||
@@ -134,8 +134,8 @@ export default function Home() {
         // key: "eeef3lDIFdW8fBz34korJwc2xlCn7TcBEHy9WeWXHJamojWC0Cfmf94NFozr",
         key: "nFYjWffy0omPsKDb8LV6kvSQ46y3azAwUfcaJertHHsatZyG9gYjLe8ua5Lu",
         // prompt:
-          // "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wall white",
-          // "turn it into an empty room, clear all the fornitur and all things, and left with only wall and the floor, with full wall colored white, all the floor colored white, the wall and the floor should be flat",
+        // "Remove all furniture from the image, including chairs, tables, sofas, and other household items, leaving behind an empty room with only the walls, floor, and ceiling visible. Ensure that the room remains natural and seamless, with no signs or marks left from where the furniture was removed. Preserve the lighting, shadows, and overall room structure. make the wall white",
+        // "turn it into an empty room, clear all the fornitur and all things, and left with only wall and the floor, with full wall colored white, all the floor colored white, the wall and the floor should be flat",
         prompt: `ultra realistic highr resolution ${requiredData.style} ${
           requiredData.type
         } room, add a forniture that will fit into
@@ -174,7 +174,8 @@ export default function Home() {
         lora_strength: 0.9,
         ip_adapter_id: "ip-adapter_sd15",
         ip_adapter_scale: 0.4,
-        ip_adapter_image: "https://res.cloudinary.com/unm/image/upload/v1724049132/regcoexupcchdfsvtrko.png",
+        ip_adapter_image:
+          "https://res.cloudinary.com/unm/image/upload/v1724049132/regcoexupcchdfsvtrko.png",
         model_id: "realistic-vision-v13",
         // model_id: "interiordesignsuperm",
         // model_id: "xsachi-interiordesgi"
@@ -192,7 +193,7 @@ export default function Home() {
 
       const response = await fetch("/api/image-generator-v2", requestOptions);
       // const response = await fetch(
-        // "https://modelslab.com/api/v6/realtime/img2img",
+      // "https://modelslab.com/api/v6/realtime/img2img",
       //   "https://modelslab.com/api/v6/images/img2img",
       //   requestOptions
       // );
@@ -202,7 +203,7 @@ export default function Home() {
       const data = await response.json();
       console.log("ini datanya", data);
       // if (data.status === "processing") {
-        if (data.data.status === "processing") {
+      if (data.data.status === "processing") {
         // const idFetch = data.id;
         const idFetch = data.data.id;
 
@@ -254,8 +255,8 @@ export default function Home() {
         };
 
         pollForImage();
-      // } else if (data.status === "success") {
-        } else if (data.data.status === "success") {
+        // } else if (data.status === "success") {
+      } else if (data.data.status === "success") {
         // setImageUrl(data.output[0]);
         setImageUrl(data.data.output[0]);
         // setLoading(false);
@@ -311,7 +312,7 @@ export default function Home() {
   };
 
   const saveProductDetail = (status, productName, productDetail) => {
-    console.log("ini",productDetail)
+    console.log("ini", productDetail);
     setModalBudgetIsOpen(status);
     setRequiredData((prevData) => {
       if (prevData.products.includes(productName)) {
@@ -353,7 +354,7 @@ export default function Home() {
           budget: formattedFinalCount,
         }));
       } else {
-        setHarga(final)
+        setHarga(final);
         setEnought(false);
       }
     } else if (productName === "wallpanel") {
@@ -401,7 +402,7 @@ export default function Home() {
           }));
         }
       } else {
-        setHarga(final)
+        setHarga(final);
         setEnought(false);
       }
     } else if (productName === "plafon") {
@@ -412,8 +413,8 @@ export default function Home() {
       );
 
       const final = Math.ceil(plafonCount) * 300000;
-      console.log("iniminya", productDetail.plafonWidth)
-      console.log(final)
+      console.log("iniminya", productDetail.plafonWidth);
+      console.log(final);
       const budgetString = requiredData.budget;
       const cleanedBudgetString = budgetString.replace(/\./g, "");
       const budget = parseInt(cleanedBudgetString, 10);
@@ -430,7 +431,7 @@ export default function Home() {
           budget: formattedFinalCount,
         }));
       } else {
-        setHarga(final)
+        setHarga(final);
         setEnought(false);
       }
     } else if (productName === "uv board") {
@@ -455,7 +456,7 @@ export default function Home() {
           budget: formattedFinalCount,
         }));
       } else {
-        setHarga(final)
+        setHarga(final);
         setEnought(false);
       }
     }

@@ -3,6 +3,7 @@ import { useRef, useEffect } from "react";
 import { Group, Box3, Vector3 } from "three";
 import { useGLTF } from "@react-three/drei";
 import { proxy } from "valtio";
+import * as THREE from 'three';
 
 const state = proxy({
   current: null,
@@ -26,6 +27,7 @@ export function Model(props: any) {
   const hight = parseInt(localStorage.getItem("hight"))
   const length = parseInt(localStorage.getItem("length"))
 
+
   const originalWidth = 1.502;
   const originalLength = 1.501;
   const originalHight = 0.014;
@@ -37,8 +39,8 @@ export function Model(props: any) {
 
   const scaleFactor = Math.min(maxScale, Math.max(minScale, (props.data.width || width / 3) * originalWidth));
   const scaleFactorLength = Math.min(maxScale, Math.max(minScale, (props.data.length || length / 3) * originalLength));
-  const scaleFactorHight = Math.min(maxScale, Math.max(minScaleHight, (props.data.hight || hight/ 3) * originalHight));
-  const scaleFactorWall = Math.min(maxScale, Math.max(minScaleWall, (props.data.hight || hight/ 3) * originalWall));
+  const scaleFactorHight = Math.min(maxScale, Math.max(minScaleHight, (props.data.hight || hight / 3) * originalHight));
+  const scaleFactorWall = Math.min(maxScale, Math.max(minScaleWall, (props.data.hight || hight / 3) * originalWall));
 
   let roundedNumber = 6.502;
   let roundedNumberLength = 1.501;
@@ -67,7 +69,7 @@ export function Model(props: any) {
   }, [groupRef.current]);
 
 
-console.log(props.color)
+  console.log(props.color)
   return (
     <group ref={groupRef} {...props} dispose={null}>
       <mesh
@@ -82,8 +84,6 @@ console.log(props.color)
       />
       <mesh
         onClick={() => handleClick("lantai")}
-        castShadow
-        receiveShadow
         geometry={nodes.lantai.geometry}
         material={materials['Material.004']}
         position={[1.117, 1, -2.300 + newScaleZ]}
@@ -95,7 +95,7 @@ console.log(props.color)
         receiveShadow
         geometry={nodes.wallpanel_kanan002.geometry}
         material={materials['Material.002']}
-        position={[1.117+ roundedNumber, 1 + roundedNumberWall, -2.198]}
+        position={[1.117 + roundedNumber, 1 + roundedNumberWall, -2.198]}
         rotation={[Math.PI, Math.PI / 2, 0]}
         scale={[-1, roundedNumberWall, -1]}
       />
@@ -118,7 +118,7 @@ console.log(props.color)
         rotation={[0, Math.PI / 2, 0]}
         scale={[roundedNumberLength, roundedNumberHight, 1.502]}
       />
-      
+
       <mesh
         onClick={() => handleClick("wallpanel kanan")}
         castShadow
@@ -149,8 +149,8 @@ console.log(props.color)
         receiveShadow
         geometry={nodes.Cube.geometry}
         material={nodes.Cube.material}
-        position={[1.122, 1 + ((roundedNumberWall*100)/50.6), -2.300 + newScaleZ]}
-        scale={[roundedNumber, 0.015 ,roundedNumberLength]}
+        position={[1.122, 1 + ((roundedNumberWall * 100) / 50.6), -2.300 + newScaleZ]}
+        scale={[roundedNumber, 0.015, roundedNumberLength]}
       />
     </group>
   );
@@ -162,7 +162,7 @@ export default function Object(props: any) {
   const groups = useRef<Group>(null);
   return (
     <group ref={groups}>
-      <Model item={props.ini} data={props.data} color={props.color}/>
+      <Model item={props.ini} data={props.data} color={props.color} />
     </group>
   );
 }
