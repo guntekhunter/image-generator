@@ -107,8 +107,6 @@ export default function Home() {
   const handleStyle = (e) => {
     setRequiredData({ ...requiredData, ["style"]: e });
   };
-  console.log(requiredData);
-
   const openModalBudget = () => {
     setModalBudgetIsOpen(!modalBudgetIsOpen);
     // setTimeout(() => setModalBudgetIsOpen(false), 3000);
@@ -116,7 +114,6 @@ export default function Home() {
 
   const saveProductDetail = (status, productName, productDetail) => {
     setHarga(0);
-    console.log("ini", productDetail);
     setModalBudgetIsOpen(status);
 
     // Update the product list based on the productName
@@ -265,9 +262,6 @@ export default function Home() {
     }
   }, [imageUrlUploaded]);
 
-  console.log(productCount);
-  console.log(products);
-
   const formatToRupiah = (amount) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -275,14 +269,29 @@ export default function Home() {
     }).format(amount);
   };
 
-  console.log(loading);
-
   const sendWidth = () => {
     router.push("/3d");
     localStorage.setItem("width", requiredData.width);
     localStorage.setItem("hight", requiredData.hight);
     localStorage.setItem("length", requiredData.length);
+
+    // localStorage.setItem("wallpanel_count", products);
   };
+  useEffect(() => {
+    if (products) {
+      for (let i = 0; i <= products.length; i++) {
+        if (products[i]?.name === "wallpanel") {
+          localStorage.setItem("wallpanel-count", products[i].quantity);
+        } else if (products[i]?.name === "vinyl") {
+          localStorage.setItem("isvinyl", "true");
+        } else if (products[i]?.name === "plafon") {
+          localStorage.setItem("isplafon", "true");
+        }
+      }
+    }
+  }, [products]);
+
+  console.log(products);
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
@@ -466,7 +475,7 @@ export default function Home() {
               </thead>
               <tbody>
                 {products.map((product, index) => (
-                  <tr>
+                  <tr key={index}>
                     <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
                       <div className="text-sm leading-5 text-gray-800">
                         {product.name}

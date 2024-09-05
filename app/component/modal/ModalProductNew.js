@@ -122,6 +122,15 @@ export default function ModalProduct({ isOpen, onClose, save, opened }) {
                             >
                                 Tebal Wallpanel
                             </DropDown>
+                            <DropDown
+                                onChange={handleChange}
+                                value={count}
+                                name="dropdown"
+                                className="custom-dropdown"
+                                options={options}
+                            >
+                                Jumlah Dinding
+                            </DropDown>
                             <Input name="hight" className={`${type === "Stengah" ? "block" : "hidden"}`}
                                 value=""
                             >Tinggi Ruangan (m)</Input>

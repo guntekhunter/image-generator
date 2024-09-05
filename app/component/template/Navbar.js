@@ -26,10 +26,15 @@ export default function Navbar(props) {
         };
     }, []);
 
+    const count = () => {
+        route.push("/hitung")
+        localStorage.clear();
+    }
+
     return (
         <div className={`h-[3rem] w-full flex justify-around border-b-[1px] transition-all duration-300 ${isScrolled ? 'fixed top-0 z-50 bg-white bg-opacity-90 backdrop-filter backdrop-blur-md' : ''}`}>
             <div className="w-[98%] flex">
-                <div className="w-[98%] items-center flex font-bold cursor-pointer" onClick={() => route.push("/")}>
+                <div className="w-[98%] items-center flex font-bold cursor-pointer" onClick={count}>
                     Pevesindo
                 </div>
                 <button className="flex h-full w-full items-center justify-end" onClick={() => route.push("/add-product")}>
