@@ -21,6 +21,7 @@ export function Model(props: any) {
 
   console.log("width", width)
   console.log("length", length)
+  console.log("length", wallpanelCount)
 
 
 
@@ -71,15 +72,22 @@ export function Model(props: any) {
 
   return (
     <group {...props} dispose={null}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.wallpanel_kiri.geometry}
-        material={materials['Material.008']}
-        position={[-width - 1.42, 1.519, 0]}
-        rotation={[0, 0, -Math.PI]}
-        scale={[1, hight, 1]}
-      />
+      {
+        wallpanelCount && (
+          <>
+            {Array.from({ length: wallpanelCount }).map((_, index) => (
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.wallpanel_kiri.geometry}
+                material={materials['Material.008']}
+                position={[0.07 - width + index * 0.155, 2 - length, 0.017]}
+                rotation={[0, 0, -Math.PI]}
+                scale={[1, hight, 1]}
+              />
+            ))}
+          </>
+        )}
       <mesh
         castShadow
         receiveShadow
