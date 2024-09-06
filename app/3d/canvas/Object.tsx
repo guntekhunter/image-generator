@@ -30,12 +30,14 @@ export function Model(props: any) {
   const hight = parseInt(localStorage.getItem("hight"))
   const length = parseInt(localStorage.getItem("length"))
 
+  const wallpanel = width / 2.95
 
-  const originalWidth = 1.502;
-  const originalLength = 1.501;
+
+  const originalWidth = 0.8;
+  const originalLength = 2;
   const originalHight = 1.522;
-  const originalWall = 1.045;
-  const maxScale = 3;
+  const originalWall = 2;
+  const maxScale = 10;
   const minScale = 0.1;
   const minScaleHight = 0.0;
   const minScaleWall = 0.1;
@@ -45,7 +47,7 @@ export function Model(props: any) {
   const scaleFactorHight = Math.min(maxScale, Math.max(minScaleHight, (props.data.hight || hight / 3) * originalHight));
   const scaleFactorWall = Math.min(maxScale, Math.max(minScaleWall, (props.data.hight || hight / 3) * originalWall));
 
-  let roundedNumber = 6.502;
+  let roundedNumber = 1;
   let roundedNumberLength = 1.501;
   let roundedNumberHight = 1.522;
   let roundedNumberWall = 1;
@@ -72,20 +74,20 @@ export function Model(props: any) {
     }
   }, [groupRef.current]);
 
-  console.log(props.data.color)
+  console.log(roundedNumber)
 
   return (
     <group {...props} dispose={null} ref={groupRef}>
       {
         wallpanelCount && (
           <>
-            {Array.from({ length: wallpanelCount + 1 }).map((_, index) => (<mesh
+            {Array.from({ length: wallpanelCount }).map((_, index) => (<mesh
               castShadow
               receiveShadow
               geometry={nodes.wallpanel_kiri.geometry}
               position={[-0.1 - roundedNumber + index * 0.155, 0 + newScaleY, -1.484]}
               scale={[1, roundedNumberHight, 1]}
-              material={materials['Material.014']}
+              material={materials['Material.005']}
               rotation={[0, 0, -Math.PI]}
             />
             ))}
@@ -107,9 +109,9 @@ export function Model(props: any) {
         receiveShadow
         geometry={nodes.plafon_flat.geometry}
         material={materials.putih}
-        position={[-0.136, 3.747, 0.008]}
+        position={[-0.15, 2.259 + roundedNumberHight, 1.15]} scale={[roundedNumber - 0.9, 2, roundedNumberLength - 0.9]}
       />
-      <group position={[-0.16, 3.159, 0.008]} scale={[3, 3, 3]} >
+      <group position={[-0.15, 2.259 + roundedNumberHight, 1.15]} scale={[roundedNumber - 0.9, 2, roundedNumberLength - 0.9]} >
         <mesh
           castShadow
           receiveShadow

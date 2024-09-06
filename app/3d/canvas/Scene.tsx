@@ -103,8 +103,8 @@ export default function Scene() {
         />
         {/* <fog attach="fog" args={["#d0d0d0", 8, 35]} /> */}
         <ambientLight intensity={0.4 * Math.PI} />
-        <directionalLight color="red" position={[100, 100, 100]} />
-        <spotLight position={[10, 10, 10]} angle={0.5} intensity={1} castShadow penumbra={1} />
+        {/* <directionalLight color="red" position={[100, 100, 100]} /> */}
+        {/* <spotLight position={[10, 10, 10]} angle={0.5} intensity={1} castShadow penumbra={1} /> */}
         <mesh>
           <Center>
             <Suspense>
