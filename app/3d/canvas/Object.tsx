@@ -81,7 +81,7 @@ export function Model(props: any) {
                 receiveShadow
                 geometry={nodes.wallpanel_kiri.geometry}
                 material={materials['Material.008']}
-                position={[0.15 - width + index * 0.315, 0, 0.020]}
+                position={[0.15 - width + index * 0.313, 0, 0.020]}
                 rotation={[0, 0, -Math.PI]}
                 scale={[2, hight, 1]}
               />
@@ -93,9 +93,9 @@ export function Model(props: any) {
         receiveShadow
         geometry={nodes.uv.geometry}
         material={materials['Material.010']}
-        position={[0.551, 1.499, -1.502]}
-        rotation={[0, 0, -Math.PI / 2]}
-        scale={[0.763, 0.499, 0.319]}
+        position={[0, 0, 0.05]}
+        rotation={[0, 0, 0]}
+        scale={[1, 1, 1]}
       />
       <mesh
         castShadow
@@ -156,9 +156,9 @@ export function Model(props: any) {
         receiveShadow
         geometry={nodes.wallpanel_kiri001.geometry}
         material={materials['Material.005']}
-        position={[1.341, 1.519, -1.406]}
+        position={[-0.02 + width, 0, 0.16]}
         rotation={[Math.PI, -Math.PI / 2, 0]}
-        scale={[1, 1.521, 1]}
+        scale={[2, hight, 1]}
       />
     </group>
     // <group {...props} dispose={null} ref={groupRef}>
