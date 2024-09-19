@@ -97,10 +97,10 @@ export default function Scene() {
       </div>
       <Canvas style={{ backgroundColor: "#FDFDFD" }} camera={{ position: [0, 0, 0.5], fov: 75 }} shadows legacy={true}>
         <OrbitControls />
-        <Environment
+        {/* <Environment
           files="/background.hdr"
           ground={{ height: 5, radius: 40, scale: 20 }}
-        />
+        /> */}
         {/* <fog attach="fog" args={["#d0d0d0", 8, 35]} /> */}
         <ambientLight intensity={0.4 * Math.PI} />
         {/* <directionalLight color="red" position={[100, 100, 100]} /> */}

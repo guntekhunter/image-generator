@@ -81,9 +81,9 @@ export function Model(props: any) {
                 receiveShadow
                 geometry={nodes.wallpanel_kiri.geometry}
                 material={materials['Material.008']}
-                position={[0.07 - width + index * 0.155, 2 - length, 0.017]}
+                position={[0.25 - width + index * 0.310, 0, 0.020]}
                 rotation={[0, 0, -Math.PI]}
-                scale={[1, hight, 1]}
+                scale={[2, hight, 1]}
               />
             ))}
           </>
@@ -141,7 +141,7 @@ export function Model(props: any) {
         receiveShadow
         geometry={nodes.dinding_kanan.geometry}
         material={nodes.dinding_kanan.material}
-        position={[0 + length, 0, 0 + width]} // Adjusted position
+        position={[0 + width, 0, 0 + length]} // Adjusted position
         rotation={[Math.PI / 2, 0, -Math.PI / 2]}
         scale={[length, 0.017, hight]} // Adjust scale
       />
