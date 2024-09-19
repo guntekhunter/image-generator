@@ -81,7 +81,7 @@ export function Model(props: any) {
                 receiveShadow
                 geometry={nodes.wallpanel_kiri.geometry}
                 material={materials['Material.008']}
-                position={[0.25 - width + index * 0.310, 0, 0.020]}
+                position={[0.15 - width + index * 0.315, 0, 0.020]}
                 rotation={[0, 0, -Math.PI]}
                 scale={[2, hight, 1]}
               />
