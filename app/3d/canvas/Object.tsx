@@ -6,7 +6,7 @@ import { proxy } from "valtio";
 import * as THREE from 'three';
 
 export function Model(props: any) {
-  const { nodes, materials } = useGLTF('/yang menar.glb');
+  const { nodes, materials } = useGLTF('/baru.glb');
   const groupRef = useRef<Group>(null);
   const wallpanelCount = parseInt(localStorage.getItem("wallpanel-count"))
   const isVinyl = localStorage.getItem("isvinyl")
@@ -110,13 +110,19 @@ export function Model(props: any) {
           castShadow
           receiveShadow
           geometry={nodes.Cube003.geometry}
-          material={materials['Material.014']}
+          material={materials['Material.001']}
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Cube003_1.geometry}
-          material={materials['Material.001']}
+          material={materials['Material.015']}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Cube003_2.geometry}
+          material={materials['Material.007']}
         />
       </group>
       <mesh
@@ -131,7 +137,7 @@ export function Model(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.dinding_depan.geometry}
-        material={nodes.dinding_depan.material}
+        material={materials['Material.001']}
         position={[0, 0, 0]} // Adjusted position
         rotation={[Math.PI / 2, 0, 0]}
         scale={[width, 0.017, hight]} // Adjust scale
@@ -140,9 +146,9 @@ export function Model(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.dinding_kanan.geometry}
-        material={nodes.dinding_kanan.material}
+        material={materials['Material.001']}
         position={[0 + width, 0, 0 + length]} // Adjusted position
-        rotation={[Math.PI / 2, 0, -Math.PI / 2]}
+        rotation={[Math.PI / 2, 0, - Math.PI / 2]}
         scale={[length, 0.017, hight]} // Adjust scale
       />
       <mesh
