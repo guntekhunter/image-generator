@@ -16,3 +16,12 @@ export const getProduct = async () => {
     console.log(error);
   }
 };
+
+export const deleteTheProduct = async (id: any) => {
+  try {
+    const res = await axios.post("/api/delete-product", id);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

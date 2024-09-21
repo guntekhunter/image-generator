@@ -6,7 +6,7 @@ import { CldUploadWidget } from "next-cloudinary";
 import TextArea from "../component/template/TextArea";
 import Image from "next/image";
 import Button from "../component/template/Button";
-import { createProduct, getProduct } from "../function/fetch/fetch";
+import { createProduct, deleteTheProduct, getProduct } from "../function/fetch/fetch";
 
 export default function page() {
   const [type, setType] = useState("");
@@ -65,7 +65,15 @@ export default function page() {
     fetchProducts();
   }, []);
 
-  console.log(products);
+  const deleteProduct = async (id: any) => {
+    try {
+      const res = await deleteTheProduct(id)
+      console.log("ommaleka", res)
+      setProducts(res.data.data);
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="flex justify-around relative scroll-smooth md:scroll-auto">
@@ -127,9 +135,14 @@ export default function page() {
                 {item.type === data.type && (
                   <button
                     key={key}
-                    className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start`}
+                    className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start relative`}
                   >
-                    <p className="text-[1rem]">{item.name}</p>
+                    <div className="flex justify-between">
+                      <p className="text-[1rem] align-center items-center flex">{item.name}</p>
+                      <div className="flex justify-around p-[.5rem] bg-red-200 rounded-md border-red-300 border-[1px]" onClick={() => deleteProduct(item.id)}>
+                        <Image src="/delete.png" alt="" width={500} height={500} className="w-[1rem]" />
+                      </div>
+                    </div>
                     <div className="w-full justify-center flex h-[10rem]">
                       <Image
                         src={item.image}
