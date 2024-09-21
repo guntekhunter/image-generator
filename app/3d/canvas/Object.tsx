@@ -82,7 +82,7 @@ export function Model(props: any) {
                 castShadow
                 receiveShadow
                 geometry={nodes.wallpanel_kiri.geometry}
-                material={materials['Material.008']}
+                material={materials[`${props.data.color}`]}
                 position={[0.15 - width + index * 0.313, 0, 0.020]}
                 rotation={[0, 0, -Math.PI]}
                 scale={[2, hight, 1]}
