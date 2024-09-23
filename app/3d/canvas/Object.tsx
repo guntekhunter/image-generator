@@ -64,6 +64,11 @@ export function Model(props: any) {
         rotation={[0, 0, 0]}
         scale={[1, 1, 1]}
       />
+      <mesh geometry={nodes.partisi_tv.geometry} material={materials['Material.012']} position={[4 - width, 4 - hight, length - 3.74]} scale={[width - 2, 0.05, 0.19]} />
+      <group position={[4 - width, 1 - hight, length - 3.74]} scale={[width - 2, .4, 0.211]}>
+        <mesh geometry={nodes.Cube012.geometry} material={materials['Material.003']} />
+        <mesh geometry={nodes.Cube012_1.geometry} material={materials['Material.007']} />
+      </group>
       <mesh
         castShadow
         receiveShadow
