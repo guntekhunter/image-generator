@@ -48,11 +48,17 @@ export function Model(props: any) {
             castShadow
             receiveShadow
             geometry={nodes.wallpanel_kiri.geometry}
-            material={materials[`${props.data.color}`]}
+            material={materials[`${props.data.wallpanel}`]}
             position={[0.15 - width + index * 0.313, 0, 0.020]}
             rotation={[0, 0, -Math.PI]}
             scale={[2, hight, 1]}
-          />
+          >
+            <meshStandardMaterial
+              attach="material"
+              color={props.color}
+              roughness={6} // Set roughness directly here
+            />
+          </mesh>
         ))
       }
       <mesh
@@ -88,20 +94,20 @@ export function Model(props: any) {
           castShadow
           receiveShadow
           geometry={nodes.Cube003_1.geometry}
-          material={materials['NP - 042NG']}
+          material={materials[`${props.data.plafon1}`]}
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Cube003_2.geometry}
-          material={materials['NP - 041NG']}
+          material={materials['NP - 029']}
         />
       </group>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.lantai.geometry}
-        material={materials['Material.006']}
+        material={materials[`${props.data.vinyl}`]}
         position={[0, 0 - hight, 0 + length]}
         scale={[width, 0.017, length]}
       />
@@ -118,13 +124,18 @@ export function Model(props: any) {
       <mesh
         castShadow
         receiveShadow
-        material-color={props.color}
         geometry={nodes.dinding_kanan.geometry}
         material={materials['Material.001']}
         position={[0 + width, 0, 0 + length]} // Adjusted position
-        rotation={[Math.PI / 2, 0, - Math.PI / 2]}
+        rotation={[Math.PI / 2, 0, -Math.PI / 2]}
         scale={[length, 0.017, hight]} // Adjust scale
-      />
+      >
+        <meshStandardMaterial
+          attach="material"
+          color={props.color}
+          roughness={6} // Set roughness directly here
+        />
+      </mesh>
       <mesh
         castShadow
         receiveShadow
@@ -144,7 +155,7 @@ export default function Object(props: any) {
   const groups = useRef<Group>(null);
   return (
     <group ref={groups}>
-      <Model item={props.ini} data={props.data} color={props.color} />
+      <Model item={props.ini} data={props.data} color={props.color} clicked={props.clicked} />
     </group>
   );
 }

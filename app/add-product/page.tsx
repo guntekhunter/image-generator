@@ -138,7 +138,7 @@ export default function page() {
                     className={`p-[1rem] rounded-[10px] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start relative`}
                   >
                     <div className="flex justify-between">
-                      <p className="text-[1rem] align-center items-center flex">{item.name}</p>
+                      <p className="text-[.7rem] align-center items-center flex">{item.name}</p>
                       <div className="flex justify-around p-[.5rem] bg-red-200 rounded-md border-red-300 border-[1px]" onClick={() => deleteProduct(item.id)}>
                         <Image src="/delete.png" alt="" width={500} height={500} className="w-[1rem]" />
                       </div>

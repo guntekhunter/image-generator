@@ -37,9 +37,14 @@ export default function Navbar(props) {
                 <div className="w-[98%] items-center flex font-bold cursor-pointer" onClick={count}>
                     Pevesindo
                 </div>
-                <button className="flex h-full w-full items-center justify-end" onClick={() => route.push("/add-product")}>
-                    <Image src="/tambah.png" alt="" height={1000} width={1000} className="w-[1rem] h-[1rem] hover:scale-125 transform duration-300" />
-                </button>
+                <div className="flex space-x-[1rem]">
+                    <button className="flex h-full w-full items-center justify-end" onClick={() => route.push("/add-product")}>
+                        <Image src="/tambah.png" alt="" height={5000} width={5000} className="w-[1rem] h-[1rem] hover:scale-125 transform duration-300" />
+                    </button>
+                    <button className="flex h-full w-full items-center justify-end" onClick={() => route.push("/add-product")}>
+                        <Image src="/tambah-forniture.png" alt="" height={5000} width={5000} className="w-[1.3rem] h-[1.3rem] hover:scale-125 transform duration-300" />
+                    </button>
+                </div>
             </div>
 
         </div>
