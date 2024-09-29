@@ -45,6 +45,12 @@ export default function Scene() {
     }
   };
 
+  const handleClick2 = (e: any) => {
+    if (clicked === "plafon") {
+      setTheData({ ...theData, "plafon2": e });
+    }
+  };
+
   const handleInput = (e: any) => {
     setTheData({ ...theData, [e.target.name]: parseFloat(e.target.value) });
   }
@@ -136,6 +142,11 @@ export default function Scene() {
                     // onMouseLeave={handleMouseLeaveOrUp}
                     onMouseUp={handleMouseLeaveOrUp}
                     onMouseMove={handleMouseMove}>
+                    {
+                      isIsPlafonPvc && (
+                        <p className="text-white pb-[1rem] text-[.8rem]">Motif 1</p>
+                      )
+                    }
                     <div className="grid grid-flow-col auto-cols-max w-max gap-[1rem]">
                       {
                         products.map((item: any, key: any) => (
@@ -162,6 +173,40 @@ export default function Scene() {
                         ))
                       }
                     </div>
+                    {
+                      isIsPlafonPvc && (
+                        <div className="pt-[1rem]">
+                          <p className="text-white text-[.8rem]">Motif 2</p>
+                          <div className="grid grid-flow-col auto-cols-max w-max gap-[1rem] pt-[1rem]">
+
+                            {
+                              products.map((item: any, key: any) => (
+                                <button
+                                  key={key}
+                                  onClick={() => handleClick2(item.description)}
+                                  className="p-[1rem] rounded-[10px] w-[5rem] bg-[#FBFBFB] border border-[#EDEDED] space-y-[.5rem] place-items-start cursor-pointer pointer-events-auto bg-white bg-opacity-50 backdrop-filter backdrop-blur-md"
+                                >
+                                  <div className="w-full justify-center flex">
+                                    <div>
+                                      <p>{item.name}</p>
+                                      <div className="flex justify-center">
+                                        <Image
+                                          src={item.image}
+                                          alt=""
+                                          width={500}
+                                          height={500}
+                                          className="w-[2rem]"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </button>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
               )

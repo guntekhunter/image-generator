@@ -100,7 +100,7 @@ export function Model(props: any) {
           castShadow
           receiveShadow
           geometry={nodes.Cube003_2.geometry}
-          material={materials['NP - 029']}
+          material={materials[`${props.data.plafon2}`]}
         />
       </group>
       <mesh
